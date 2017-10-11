@@ -6,7 +6,7 @@ from kafka import KafkaConsumer
 #@app.route("/")
 def main():
     consumer = KafkaConsumer(group_id=b"my_group_id",
-                             bootstrap_servers=["lovisa:9092"],
+                             bootstrap_servers=["129.16.125.242:9092"],
                              value_deserializer = lambda m: m.decode('ascii'))
 
     consumer.subscribe(topics=['test'])

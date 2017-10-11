@@ -24,7 +24,7 @@ def print_response(response=None):
 
 
 def main(freq):
-    kafka = KafkaClient("lovisa:9092")
+    kafka = KafkaClient("129.16.125.242:9092")
     producer = SimpleProducer(kafka)
 
     topic = 'test'
