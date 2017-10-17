@@ -60,7 +60,7 @@ def get_files():
     producer = SimpleProducer(kafka)
     topic = 'test'
 
-    for root, dirs, files in os.walk('/mnt/volume/fromAl/Data_20151215 HepG2 LNP size exp live cell 24h_20151215_110422/AssayPlate_NUNC_#165305-1/'):
+    for root, dirs, files in os.walk('/mnt/volume/fromAl/f/Data_20151215 HepG2 LNP size exp live cell 24h_20151215_110422/AssayPlate_NUNC_#165305-1/'):
        print("Length of 'files': {}", len(files))
        if type(files) is list:
           print("files is list")
