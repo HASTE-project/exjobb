@@ -79,13 +79,14 @@ def get_files():
           print('/mnt/volume/fromAl/Data_20151215 HepG2 LNP size exp live cell 24h_20151215_110422/AssayPlate_NUNC_#165305-1/' + files[0])
           for index in range(len(files)):
              img = cv2.imread('/mnt/volume/fromAl/Data_20151215 HepG2 LNP size exp live cell 24h_20151215_110422/AssayPlate_NUNC_#165305-1/' + files[index])
-             success, img = img.read()
-             if not success:
-                 break
+#             success, img = img.read()
+#             if not success:
+ #                break
 #             print("in for loop")
              ret, jpeg = cv2.imencode('.png', img)
              msg = bytes(files[index], 'utf-8')
-             producer.send_messages(topic, msg)
+             producer.send_messages(topic, jpeg.tobytes())
+             #producer.send_messages(topic, msg)
        kafka.close()
 
 if __name__ == "__main__":
