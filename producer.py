@@ -86,7 +86,7 @@ def get_files():
              ret, jpeg = cv2.imencode('.png', img)
              msg = bytes(files[index], 'utf-8')
              producer.send_messages(topic, jpeg.tobytes())
-             #producer.send_messages(topic, msg)
+#             producer.send_messages(topic, msg)
        kafka.close()
 
 if __name__ == "__main__":
