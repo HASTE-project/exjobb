@@ -6,14 +6,23 @@
 <title>Simulator</title>
 <form action="/fileWalk" method="POST">
     <dl>
-      <dt>Set interval (seconds):
-      <dd><input type=number step=0.001 min=0.001 name=interval>
-      <dd><input type=submit value=Submit>
-      <dt>Set binning: <br>
-      <input type=radio name=binning value='1x1'> 1x1<br>
-      <input type=radio name=binning value='2x2'> 2x2<br>
-      <input type=radio name=binning value='3x3'> 3x3<br>
-      <input type=radio name=binning value='4x4'> 4x4
+        <dt>Stream with Kafka: <br>
+        <dd><input type="radio" name="kafka" value="yes"> Yes<br>
+        <dd><input type="radio" name="kafka" value="no"> No<br>
+        <dt>File path to image storage:
+        <dd><input type="text" name="file_path"><br>
+        <dt>Set interval (seconds):
+        <dd><input type=number step=0.001 min=0.001 name=interval>
+        <dd><input type=submit value=Submit>
+        <dt>Set binning: <br>
+            <input type=radio name=binning value=1> 1x1<br>
+            <input type=radio name=binning value=2> 2x2<br>
+            <input type=radio name=binning value=3> 3x3<br>
+            <input type=radio name=binning value=4> 4x4
+        <dt>Set color channel: <br>
+            <input type=checkbox name=color_channel value='red'> Red<br>
+            <input type=checkbox name=color_channel value='green'> Green<br>
+            <input type=checkbox name=color_channel value='bright_field'> Bright field<br>
     </dl>
 </form>
 </body>
