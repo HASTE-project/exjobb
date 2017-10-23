@@ -11,18 +11,18 @@ from kafka.common import LeaderNotAvailableError
 
 def connect(message):
 #    print("in kafka_producer.connect()"
- #   print("hoho")
+#    print("type(message): {}".format(type(message)))
     kafka = KafkaClient("129.16.125.231:9092")
     producer = SimpleProducer(kafka)
     topic = 'test'
     msg = b'Hello from the other side!'
 
     try:
-        print_response(producer.send_messages(topic, msg))
+        producer.send_messages(topic, message)
     except LeaderNotAvailableError:
         # https://github.com/mumrah/kafka-python/issues/249
         time.sleep(1)
-        print_response(producer.send_messages(topic, msg))
+        print_response(producer.send_messages(topic, message))
 
     kafka.close()
 
@@ -42,6 +42,7 @@ def get_files():
             img = cv2.imread('/mnt/volume/fromAl/Data_20151215 HepG2 LNP size exp live cell '
                              '24h_20151215_110422/AssayPlate_NUNC_#165305-1/' + files[i])
             ret, jpeg = cv2.imencode('.png', img)
+            print("type(jpeg.tobytes): {}".format(jpeg.tobytes()))
             producer.send_messages(topic, jpeg.tobytes())
     kafka.close()
 

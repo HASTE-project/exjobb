@@ -41,13 +41,16 @@ def main():
            print(message.offset)
 #           yield (b'--frame\r\n'
  #                 b'Content-Type:image/png\r\n\r\n' + message.value + b'\r\n\r\r')
- #          imgfile = BytesIO(message.value)
-#           img = Image.open(imgfile)
-#           print(img)
-           imag = np.fromstring(message.value, sep ="/")
-           print(str(message.offset) + ".png")
-           cv2.imwrite(os.path.join(os.path.expanduser('~'), str(message.offset) + ".tif"), imag)
-#           cv2.imshow("binImg", np.fromstring(message.value, sep ="/"))
+           #safe image as png
+           imgfile = BytesIO(message.value)
+           img = Image.open(imgfile)
+           img.save(os.path.join(os.path.expanduser('~'), str(message.offset) + ".png"))
+
+#           imag = np.fromstring(message.value, sep ="/")
+ #          print("imag: {}".format(imag))
+  #         print("type(imag): {}".format(type(imag)))
+          # cv2.imwrite(os.path.join(os.path.expanduser('~'), str(message.offset) + ".png"), imag)
+
            print("efter imwrite")
    #      f = open("test.txt","a") #opens file with name of "test.txt"
     #     f.write("\n offset: {} ".format(message.offset))

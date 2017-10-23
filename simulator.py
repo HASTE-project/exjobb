@@ -100,7 +100,8 @@ def get_files(file_path, frequency, binning, color_channel, connect_kafka):
                         print("in if")
                        # ret, jpeg = cv2.imencode('.png', img)
                         ret, jpeg = cv2.imencode('.png', img_as_ubyte(binned_img))
-                        kafka_producer.connect(jpeg.tobytes)
+                        #print("type(jpeg.tobytes): {}".format(jpeg.tobytes()))
+                        kafka_producer.connect(jpeg.tobytes())
                  #   time.sleep(frequency)
                 #    return jpeg
 
