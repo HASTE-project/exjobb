@@ -3,7 +3,7 @@ import numpy as np
 #import scipy as sp
 import os
 import cv2
-import kafka_producer
+#import kafka_producer
 
 
 from skimage.measure import block_reduce
@@ -24,7 +24,7 @@ def index_post():
     binning = request.form["binning"]
     color_channel = request.form.getlist("color_channel")
     connect_kafka = request.form["kafka"]
-    if connect_kafka:
+    if connect_kafka == "yes":
         print("connect to KAfka")
         connect_kafka()
         #use Kafka as streaming fw
@@ -61,12 +61,13 @@ def file_walk_post():
     interval = float(frequency)
     print("binning: {} color_channel: {}".format(binning, color_channel))
     message = get_files(file_path, interval, binning, color_channel)
+    print(message)
 
-    if connect_kafka:
+    if connect_kafka == "yes":
         #use Kafka as streaming fw
         print("use Kafka")
-        ret, jpeg = cv2.imencode('.png', message)
-        kafka_producer.connect(jpeg.tobytes)
+       # ret, jpeg = cv2.imencode('.png', message)
+        kafka_producer.connect(message.tobytes)
 
     return "You are now streaming file names with Kafka"
 
@@ -92,9 +93,11 @@ def get_files(file_path, frequency, binning, color_channel):
                     print("i = {}".format(i))
                     img = cv2.imread(file_path + files[i], -1)
 
-                    yield block_reduce(img, block_size=(binning, binning), func=np.sum)
-                #    ret, jpeg = cv2.imencode('.png', binned_img)
-                    time.sleep(frequency)
+                    binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
+                 #   return binned_img
+                   # ret, jpeg = cv2.imencode('.png', binned_img)
+                 #   time.sleep(frequency)
+                    return jpeg
 
 
 if __name__ == "__main__":
