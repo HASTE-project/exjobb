@@ -2,8 +2,8 @@ import time, threading, random
 import numpy as np
 #import scipy as sp
 import os
-
 import cv2
+import kafka_producer
 
 
 from skimage.measure import block_reduce
@@ -23,6 +23,11 @@ def index_post():
     frequency = request.form["interval"]
     binning = request.form["binning"]
     color_channel = request.form.getlist("color_channel")
+    connect_kafka = request.form["kafka"]
+    if connect_kafka:
+        print("connect to KAfka")
+        connect_kafka()
+        #use Kafka as streaming fw
     interval = float(frequency)
     print("binning: {} color_channel: {}".format(binning, color_channel))
     main(interval, binning, color_channel)
@@ -52,9 +57,17 @@ def file_walk_post():
     frequency = request.form["interval"]
     binning = request.form["binning"]
     color_channel = request.form.getlist("color_channel")
+    connect_kafka = request.form["kafka"]
     interval = float(frequency)
     print("binning: {} color_channel: {}".format(binning, color_channel))
-    get_files(file_path, frequency, binning, color_channel)
+    message = get_files(file_path, interval, binning, color_channel)
+
+    if connect_kafka:
+        #use Kafka as streaming fw
+        print("use Kafka")
+        ret, jpeg = cv2.imencode('.png', message)
+        kafka_producer.connect(jpeg.tobytes)
+
     return "You are now streaming file names with Kafka"
 
 
@@ -63,9 +76,7 @@ def get_files(file_path, frequency, binning, color_channel):
     print("in get_files")
     binning = int(binning)
     frequency = float(frequency)
-    print(file_path)
-    if isinstance(binning, str):
-        print("binning is string")
+    # print(file_path)
 
     for root, dirs, files in os.walk(file_path):
         print("Length of 'files': {}", len(files))
@@ -76,12 +87,14 @@ def get_files(file_path, frequency, binning, color_channel):
                 print("dirs is empty")
             print(file_path + files[0])
             for i in range(len(files)):
-                print("i = {}".format(i))
-                img = cv2.imread(file_path + files[i], -1)
+                # print("sista bokstaven: {} ".format(files[i][-5]))
+                if files[i][-5] in color_channel:
+                    print("i = {}".format(i))
+                    img = cv2.imread(file_path + files[i], -1)
 
-                binned_img = block_reduce(img, block_size=(1, 1), func=np.sum)
-            #    ret, jpeg = cv2.imencode('.png', binned_img)
-                time.sleep(frequency)
+                    yield block_reduce(img, block_size=(binning, binning), func=np.sum)
+                #    ret, jpeg = cv2.imencode('.png', binned_img)
+                    time.sleep(frequency)
 
 
 if __name__ == "__main__":
