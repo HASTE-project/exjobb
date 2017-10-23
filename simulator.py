@@ -3,8 +3,8 @@ import numpy as np
 #import scipy as sp
 import os
 import cv2
-import kafka_producer
-
+#import kafka_producer
+from skimage import img_as_ubyte
 
 from skimage.measure import block_reduce
 from os.path import join, getsize
@@ -60,19 +60,19 @@ def file_walk_post():
     connect_kafka = request.form["kafka"]
     interval = float(frequency)
     print("binning: {} color_channel: {}".format(binning, color_channel))
-    message = get_files(file_path, interval, binning, color_channel)
-    print(message)
+    get_files(file_path, interval, binning, color_channel, connect_kafka)
+    #print(message)
 
     if connect_kafka == "yes":
         #use Kafka as streaming fw
         print("use Kafka")
        # ret, jpeg = cv2.imencode('.png', message)
-        kafka_producer.connect(message.tobytes)
+     #   kafka_producer.connect(message.tobytes)
 
     return "You are now streaming file names with Kafka"
 
 
-def get_files(file_path, frequency, binning, color_channel):
+def get_files(file_path, frequency, binning, color_channel, connect_kafka):
     print("freq: {} binning: {} color_channels: {} ".format(frequency, binning, color_channel))
     print("in get_files")
     binning = int(binning)
@@ -92,12 +92,15 @@ def get_files(file_path, frequency, binning, color_channel):
                 if files[i][-5] in color_channel:
                     print("i = {}".format(i))
                     img = cv2.imread(file_path + files[i], -1)
-
+                    #print("type of img: {} ".format(type(img)))
                     binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
-                    yield binned_img
-                    if conected_kafka == "yes":
-		         
-                   # ret, jpeg = cv2.imencode('.png', binned_img)
+                   # print("type of binned_img: {} ".format(type(binned_img)))
+                    #yield binned_img
+                    if connect_kafka == "yes":
+                        print("in if")
+                       # ret, jpeg = cv2.imencode('.png', img)
+                        ret, jpeg = cv2.imencode('.png', img_as_ubyte(binned_img))
+                        kafka_producer.connect(jpeg.tobytes)
                  #   time.sleep(frequency)
                 #    return jpeg
 
