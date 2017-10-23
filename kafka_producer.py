@@ -10,27 +10,29 @@ from kafka.common import LeaderNotAvailableError
 
 
 def connect(message):
-    kafka = KafkaClient("129.16.125.242:9092")
+#    print("in kafka_producer.connect()"
+ #   print("hoho")
+    kafka = KafkaClient("129.16.125.231:9092")
     producer = SimpleProducer(kafka)
     topic = 'test'
     msg = b'Hello from the other side!'
 
     try:
-        print_response(producer.send_messages(topic, message))
+        print_response(producer.send_messages(topic, msg))
     except LeaderNotAvailableError:
         # https://github.com/mumrah/kafka-python/issues/249
         time.sleep(1)
-        print_response(producer.send_messages(topic, message))
+        print_response(producer.send_messages(topic, msg))
 
     kafka.close()
 
     #add randomness in time in datageneration (maybe better with normal distribution??)
-    interval = random.uniform(freq-freq/5, freq-freq/5)
-    threading.Timer(interval,main,[freq]).start()
+    #interval = random.uniform(freq-freq/5, freq-freq/5)
+    #threading.Timer(interval,main,[freq]).start()
 
 
 def get_files():
-    kafka = KafkaClient("129.16.125.242:9092")
+    kafka = KafkaClient("129.16.125.231:9092")
     producer = SimpleProducer(kafka)
     topic = 'test'
 
@@ -44,4 +46,7 @@ def get_files():
     kafka.close()
 
 
-
+def print_response(response=None):
+    if response:
+        print('Error: {0}'.format(response[0].error))
+        print('Offset: {0}'.format(response[0].offset))

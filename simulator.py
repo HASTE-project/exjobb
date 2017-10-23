@@ -3,7 +3,7 @@ import numpy as np
 #import scipy as sp
 import os
 import cv2
-#import kafka_producer
+import kafka_producer
 from skimage import img_as_ubyte
 
 from skimage.measure import block_reduce
@@ -63,9 +63,9 @@ def file_walk_post():
     get_files(file_path, interval, binning, color_channel, connect_kafka)
     #print(message)
 
-    if connect_kafka == "yes":
+#    if connect_kafka == "yes":
         #use Kafka as streaming fw
-        print("use Kafka")
+ #       print("use Kafka")
        # ret, jpeg = cv2.imencode('.png', message)
      #   kafka_producer.connect(message.tobytes)
 
