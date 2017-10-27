@@ -3,7 +3,7 @@ import numpy as np
 #import scipy as sp
 import os
 import cv2
-#import kafka_producer
+import kafka_producer
 from skimage import img_as_ubyte
 
 from skimage.measure import block_reduce
@@ -101,7 +101,7 @@ def get_files(file_path, frequency, binning, color_channel, connect_kafka):
                        # ret, jpeg = cv2.imencode('.png', img)
                         ret, jpeg = cv2.imencode('.png', img_as_ubyte(binned_img))
                         kafka_producer.connect(jpeg.tobytes)
-                 #   time.sleep(frequency)
+                    time.sleep(frequency)
                 #    return jpeg
 
 
