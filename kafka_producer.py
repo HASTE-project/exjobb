@@ -10,13 +10,15 @@ from kafka.common import LeaderNotAvailableError
 
 
 def connect(message):
-    kafka = KafkaClient("129.16.125.242:9092")
+#    print("in kafka_producer.connect()"
+#    print("type(message): {}".format(type(message)))
+    kafka = KafkaClient("129.16.125.231:9092")
     producer = SimpleProducer(kafka)
     topic = 'test'
     msg = b'Hello from the other side!'
 
     try:
-        print_response(producer.send_messages(topic, message))
+        producer.send_messages(topic, message)
     except LeaderNotAvailableError:
         # https://github.com/mumrah/kafka-python/issues/249
         time.sleep(1)
@@ -25,12 +27,12 @@ def connect(message):
     kafka.close()
 
     #add randomness in time in datageneration (maybe better with normal distribution??)
-    interval = random.uniform(freq-freq/5, freq-freq/5)
-    threading.Timer(interval,main,[freq]).start()
+    #interval = random.uniform(freq-freq/5, freq-freq/5)
+    #threading.Timer(interval,main,[freq]).start()
 
 
 def get_files():
-    kafka = KafkaClient("129.16.125.242:9092")
+    kafka = KafkaClient("129.16.125.231:9092")
     producer = SimpleProducer(kafka)
     topic = 'test'
 
@@ -40,8 +42,12 @@ def get_files():
             img = cv2.imread('/mnt/volume/fromAl/Data_20151215 HepG2 LNP size exp live cell '
                              '24h_20151215_110422/AssayPlate_NUNC_#165305-1/' + files[i])
             ret, jpeg = cv2.imencode('.png', img)
+            print("type(jpeg.tobytes): {}".format(jpeg.tobytes()))
             producer.send_messages(topic, jpeg.tobytes())
     kafka.close()
 
 
-
+def print_response(response=None):
+    if response:
+        print('Error: {0}'.format(response[0].error))
+        print('Offset: {0}'.format(response[0].offset))

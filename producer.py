@@ -31,7 +31,7 @@ def print_response(response=None):
 
 
 def main(freq):
-    kafka = KafkaClient("129.16.125.242:9092")
+    kafka = KafkaClient("129.16.125.231:9092")
     producer = SimpleProducer(kafka)
 
     topic = 'test'
@@ -63,7 +63,7 @@ def file_walk_post():
 
 
 def get_files():
-    kafka = KafkaClient("129.16.125.242:9092")
+    kafka = KafkaClient("129.16.125.231:9092")
     producer = SimpleProducer(kafka)
     topic = 'test'
 

@@ -63,9 +63,9 @@ def file_walk_post():
     get_files(file_path, interval, binning, color_channel, connect_kafka)
     #print(message)
 
-    if connect_kafka == "yes":
+#    if connect_kafka == "yes":
         #use Kafka as streaming fw
-        print("use Kafka")
+ #       print("use Kafka")
        # ret, jpeg = cv2.imencode('.png', message)
      #   kafka_producer.connect(message.tobytes)
 
@@ -100,8 +100,11 @@ def get_files(file_path, frequency, binning, color_channel, connect_kafka):
                         print("in if")
                        # ret, jpeg = cv2.imencode('.png', img)
                         ret, jpeg = cv2.imencode('.png', img_as_ubyte(binned_img))
-                        kafka_producer.connect(jpeg.tobytes)
+
+                        #print("type(jpeg.tobytes): {}".format(jpeg.tobytes()))
+                        kafka_producer.connect(jpeg.tobytes())
                     time.sleep(frequency)
+
                 #    return jpeg
 
 
