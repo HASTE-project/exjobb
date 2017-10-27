@@ -24,9 +24,7 @@ def main():
 #                             value_deserializer = lambda m: m.decode('ascii'))
 
     consumer.subscribe(topics=['test'])
-#    print("in main")
-    print('hohoho')
- #   return ('hejhej')
+
    # return Response(events(),
     #                mimetype='multipart/x-mixed-replace; boundary=frame')
 
