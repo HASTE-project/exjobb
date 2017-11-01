@@ -1,0 +1,30 @@
+<!doctype html>
+
+<head>Admin panel</head>
+
+<body>
+<title>Admin panel</title>
+<form action="/adminPanel" method="POST">
+    <dl>
+        <dt>Stream with Kafka: <br>
+        <dd><input type="radio" name="kafka" value="yes"> Yes<br>
+        <dd><input type="radio" name="kafka" value="no"> No<br>
+        <dt>File path to image storage:
+        <dd><input type="text" name="file_path"><br>
+        <dt>Set interval (seconds):
+        <dd><input type=number step=0.001 min=0.001 name=interval>
+        <dd><input type=submit value=Submit>
+        <dt>Set binning: <br>
+            <input type=radio name=binning value=1> 1x1<br>
+            <input type=radio name=binning value=2> 2x2<br>
+            <input type=radio name=binning value=3> 3x3<br>
+            <input type=radio name=binning value=4> 4x4
+        <dt>Set color channel: <br>
+            <input type=checkbox name=color_channel value=1> 1<br>
+            <input type=checkbox name=color_channel value=2> 2<br>
+            <input type=checkbox name=color_channel value=3> 3<br>
+            <input type=checkbox name=color_channel value=4> 4<br>
+            <input type=checkbox name=color_channel value=5> 5<br>
+    </dl>
+</form>
+</body>

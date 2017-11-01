@@ -3,7 +3,8 @@ import numpy as np
 #import scipy as sp
 import os
 import cv2
-import kafka_producer
+import timeit
+#import kafka_producer
 from skimage import img_as_ubyte
 
 from skimage.measure import block_reduce
@@ -43,23 +44,65 @@ def get_files(file_path, frequency, binning, color_channel, connect_kafka):
     frequency = float(frequency)
 
     for root, dirs, files in os.walk(file_path):
-        print("Length of 'files': {}", len(files))
+        #print("Length of 'files': {}", len(files))
         if not files:
-            print("files is empty")
+            pass
+            #print("files is empty")
         else:
             if not dirs:
-                print("dirs is empty")
-            print(file_path + files[0])
+                pass #   print("dirs is empty")
+            #print(file_path + files[0])
             for i in range(len(files)):
-                if files[i][-5] in color_channel:
-                    print("i = {}".format(i))
-                    img = cv2.imread(file_path + files[i], -1)
-                    binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
-                    if connect_kafka == "yes":
-                        #print("in if")
-                        ret, jpeg = cv2.imencode('.png', img_as_ubyte(binned_img))
-                        kafka_producer.connect(jpeg.tobytes())
-                    time.sleep(frequency)
+                get_file(files, i, color_channel, file_path, binning, connect_kafka)
+                # if files[i][-5] in color_channel:
+                #   #  print("i = {}".format(i))
+                #     img = cv2.imread(file_path + files[i], -1)
+                #     binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
+                #     if connect_kafka == "yes":
+                #         #print("in if")
+                #         ret, jpeg = cv2.imencode('.png', img_as_ubyte(binned_img))
+                #         kafka_producer.connect(jpeg.tobytes())
+                time.sleep(frequency)
+
+
+def get_file(files, i, color_channel, file_path, binning, connect_kafka):
+    if files[i][-5] in color_channel:
+        #  print("i = {}".format(i))
+        img = cv2.imread(file_path + files[i], -1)
+        binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
+        if connect_kafka == "yes":
+            # print("in if")
+            ret, jpeg = cv2.imencode('.png', img_as_ubyte(binned_img))
+            kafka_producer.connect(jpeg.tobytes())
+
+
+@app.route("/adminPanel")
+def admin():
+    return render_template("admin_panel.html")
+
+
+@app.route("/adminPanel", methods=['POST'])
+def admin_fun():
+    print("in admin fun")
+    #test max freq - kolla hur lång tid varje steg i for-loopen tar
+    #test if set freq corresponds to actual freq
+    #test freq for different image sizes
+
+    #input: JSON file with test settings (possible to make multiple runs at once)
+    #output: 1. text file with freq info 2. graphs showing performance
+    timeit.timeit(get_files(file_path, frequency, binning,
+                            color_channel, connect_kafka),
+                  '''from __main__ import get_files,'
+                    'file_path, frequency=0, color_channel,'
+                    'binning, connect_kafka''')
+    # (stmt='pass', setup='pass', timer=<default timer>, number=1000000, globals=None)
+
+
+def retrieval_time():
+    #kolla hur lång tid varje steg i (inre) for-loopen tar för att hämta bilder
+    #output: medelvärde, std, var, histogram över alla frekvenser
+    #1. set freq = 0
+    pass
 
 
 if __name__ == "__main__":
