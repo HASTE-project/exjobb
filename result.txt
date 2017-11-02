@@ -1,0 +1,2 @@
+{"file_path": "file/path", "binning": 1, "frequency": 0, "color_channel": [], "connect_kafka": "No"}
+{"file_path": "file/path2", "binning": 1, "frequency": 0, "color_channel": [], "connect_kafka": "No"}

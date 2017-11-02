@@ -4,6 +4,7 @@ import numpy as np
 import os
 import cv2
 import timeit
+import json
 #import kafka_producer
 from skimage import img_as_ubyte
 
@@ -81,20 +82,95 @@ def admin():
     return render_template("admin_panel.html")
 
 
-@app.route("/adminPanel", methods=['POST'])
+
+# def admin_fun():
+#     #test max freq - kolla hur lång tid varje steg i for-loopen tar
+#     #test if set freq corresponds to actual freq
+#     #test freq for different image sizes
+#
+#     # input: JSON file with test settings (possible to make multiple runs at once)
+#     json_file = request.form["file_path"]
+#     json_file = open(json_file, "r")
+#     run_information = json_file.read()
+#     print(run_information)
+#     run_information = json.loads(run_information)
+#     #  print(run_information['run1']['binning'])
+#
+#     for run in run_information:
+#         #start a new test run and save score
+#         #use timeit
+#         file_path = run_information[run]['file_path']
+#         print(file_path)
+#         files = os.listdir(file_path)
+#         print(files)
+#         color_channel = run_information[run]['color_channel']
+#         binning = run_information[run]['binning']
+#         connect_kafka = run_information[run]['connect_kafka']
+#         setup = '''
+# from __main__ import run_information
+# file_path = run_information[run]['file_path']
+# print(file_path)
+# files = os.listdir(file_path)
+# print(files)
+# #color_channel = run_information[run]['color_channel']
+# #binning = run_information[run]['binning']
+# #connect_kafka = run_information[run]['connect_kafka']
+#         '''
+#         for i in range(100):
+#             timeit.timeit('get_file(files, i, color_channel, file_path, binning, connect_kafka)',
+#                           setup=setup,
+#                           number=10)
+#             #get_file(files, i, color_channel, file_path, binning, connect_kafka)
+#
+#         result = run_information[run]
+#         result = json.dumps(result)
+#         save_results(result)
+#
+#
+#     #output: 1. text file with freq info 2. graphs showing performance
+#
+#     return ("in admin fun")
 def admin_fun():
-    print("in admin fun")
     #test max freq - kolla hur lång tid varje steg i for-loopen tar
     #test if set freq corresponds to actual freq
     #test freq for different image sizes
 
-    #input: JSON file with test settings (possible to make multiple runs at once)
-    #output: 1. text file with freq info 2. graphs showing performance
-    timeit.timeit(get_files(file_path, frequency, binning,
-                            color_channel, connect_kafka),
-                  '''from __main__ import get_files,'
-                    'file_path, frequency=0, color_channel,'
-                    'binning, connect_kafka''')
+    # input: JSON file with test settings (possible to make multiple runs at once)
+    json_file = request.form["file_path"]
+    json_file = open(json_file, "r")
+    run_information = json_file.read()
+    print(run_information)
+    run_information = json.loads(run_information)
+    #  print(run_information['run1']['binning'])
+
+    def inner_func():
+        print(run_information)
+
+    return "in admin fun"
+
+
+@app.route("/adminPanel", methods=['POST'])
+def test_timeit():
+    setup = '''
+from simulator import admin_fun
+admin_fun()     
+    '''
+    timeit.timeit('inner_func()', setup=setup)
+
+def save_results(results):
+    fo = open("result.txt", "a")
+    fo.write(results)
+    fo.write("\n")
+    # Close opend file
+    fo.close()
+
+
+
+    # timeit.timeit(get_files(file_path, frequency, binning,
+    #                         color_channel, connect_kafka),
+    #               '''from __main__ import get_files,'
+    #                 'file_path, frequency=0, color_channel,'
+    #                 'binning, connect_kafka''')
     # (stmt='pass', setup='pass', timer=<default timer>, number=1000000, globals=None)
 
 
