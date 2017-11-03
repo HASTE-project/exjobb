@@ -11,3 +11,6 @@ env.bak/
 venv.bak/
 
 /.idea
+
+result.txt
+test.json

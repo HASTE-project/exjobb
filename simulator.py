@@ -45,34 +45,21 @@ def get_files(file_path, frequency, binning, color_channel, connect_kafka):
     frequency = float(frequency)
 
     for root, dirs, files in os.walk(file_path):
-        #print("Length of 'files': {}", len(files))
         if not files:
             pass
-            #print("files is empty")
         else:
             if not dirs:
-                pass #   print("dirs is empty")
-            #print(file_path + files[0])
+                pass
             for i in range(len(files)):
                 get_file(files, i, color_channel, file_path, binning, connect_kafka)
-                # if files[i][-5] in color_channel:
-                #   #  print("i = {}".format(i))
-                #     img = cv2.imread(file_path + files[i], -1)
-                #     binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
-                #     if connect_kafka == "yes":
-                #         #print("in if")
-                #         ret, jpeg = cv2.imencode('.png', img_as_ubyte(binned_img))
-                #         kafka_producer.connect(jpeg.tobytes())
                 time.sleep(frequency)
 
 
 def get_file(files, i, color_channel, file_path, binning, connect_kafka):
     if files[i][-5] in color_channel:
-        #  print("i = {}".format(i))
         img = cv2.imread(file_path + files[i], -1)
         binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
         if connect_kafka == "yes":
-            # print("in if")
             ret, jpeg = cv2.imencode('.png', img_as_ubyte(binned_img))
             kafka_producer.connect(jpeg.tobytes())
 
@@ -84,18 +71,7 @@ def admin():
 
 
 # def admin_fun():
-#     #test max freq - kolla hur lång tid varje steg i for-loopen tar
-#     #test if set freq corresponds to actual freq
-#     #test freq for different image sizes
-#
-#     # input: JSON file with test settings (possible to make multiple runs at once)
-#     json_file = request.form["file_path"]
-#     json_file = open(json_file, "r")
-#     run_information = json_file.read()
-#     print(run_information)
-#     run_information = json.loads(run_information)
-#     #  print(run_information['run1']['binning'])
-#
+
 #     for run in run_information:
 #         #start a new test run and save score
 #         #use timeit
@@ -111,9 +87,7 @@ def admin():
 # file_path = run_information[run]['file_path']
 # print(file_path)
 # files = os.listdir(file_path)
-# print(files)
-# #color_channel = run_information[run]['color_channel']
-# #binning = run_information[run]['binning']
+
 # #connect_kafka = run_information[run]['connect_kafka']
 #         '''
 #         for i in range(100):
@@ -139,39 +113,35 @@ def admin_fun():
     json_file = request.form["file_path"]
     json_file = open(json_file, "r")
     run_information = json_file.read()
-    print(run_information)
     run_information = json.loads(run_information)
-    #  print(run_information['run1']['binning'])
 
-    def inner_func():
-        print(run_information)
+    return run_information
 
-    return "in admin fun"
+
+def inner_func(run_info):
+    print(run_info)
 
 
 @app.route("/adminPanel", methods=['POST'])
 def test_timeit():
     setup = '''
-from simulator import admin_fun
-admin_fun()     
+from simulator import admin_fun, inner_func, get_file
+run_information = admin_fun() 
+# frequency = run_information['run']['frequency']
+# color_channel = run_information[run]['color_channel']
+# binning = run_information[run]['binning']
+# file_path = run_information[run]['file_path']
+# connect_kafka = run_information[run]['connect_kafka']   
     '''
-    timeit.timeit('inner_func()', setup=setup)
+    save_results(str(timeit.timeit('inner_func(run_information)', setup=setup, number=3)))
+    return "test ready"
+
 
 def save_results(results):
     fo = open("result.txt", "a")
     fo.write(results)
     fo.write("\n")
-    # Close opend file
     fo.close()
-
-
-
-    # timeit.timeit(get_files(file_path, frequency, binning,
-    #                         color_channel, connect_kafka),
-    #               '''from __main__ import get_files,'
-    #                 'file_path, frequency=0, color_channel,'
-    #                 'binning, connect_kafka''')
-    # (stmt='pass', setup='pass', timer=<default timer>, number=1000000, globals=None)
 
 
 def retrieval_time():
