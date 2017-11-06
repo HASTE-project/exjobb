@@ -5,6 +5,7 @@ import os
 import cv2
 import timeit
 import json
+import string
 #import kafka_producer
 from skimage import img_as_ubyte
 
@@ -30,7 +31,7 @@ def file_walk():
 def file_walk_post():
     file_path = request.form["file_path"]
     frequency = request.form["interval"]
-    binning = request.form["binning"]
+    binning = int(request.form["binning"])
     color_channel = request.form.getlist("color_channel")
     connect_kafka = request.form["kafka"]
     interval = float(frequency)
@@ -39,10 +40,6 @@ def file_walk_post():
 
 
 def get_files(file_path, frequency, binning, color_channel, connect_kafka):
-    print("freq: {} binning: {} color_channels: {} ".format(frequency, binning, color_channel))
-    print("in get_files")
-    binning = int(binning)
-    frequency = float(frequency)
 
     for root, dirs, files in os.walk(file_path):
         if not files:
@@ -124,21 +121,27 @@ def inner_func(run_info):
 
 @app.route("/adminPanel", methods=['POST'])
 def test_timeit():
-    setup = '''
-from simulator import admin_fun, inner_func, get_file
+    setup_template = '''
+from simulator import admin_fun, inner_func, get_files
 run_information = admin_fun() 
-# frequency = run_information['run']['frequency']
-# color_channel = run_information[run]['color_channel']
-# binning = run_information[run]['binning']
-# file_path = run_information[run]['file_path']
-# connect_kafka = run_information[run]['connect_kafka']   
+frequency = run_information['run']['frequency']
+color_channel = run_information['run']['color_channel']
+binning = run_information['run']['binning']
+file_path = run_information['run']['file_path']
+connect_kafka = run_information['run']['connect_kafka']   
     '''
-    save_results(str(timeit.timeit('inner_func(run_information)', setup=setup, number=3)))
+
+    runs = 2
+    for run in range(1, runs):
+        setup = setup_template.replace("'run'", "'run{}'".format(run))
+        save_results(str(timeit.timeit('get_files(file_path, frequency, binning, color_channel, connect_kafka)',
+                                       setup=setup, number=3)), run)
     return "test ready"
 
 
-def save_results(results):
+def save_results(results, run):
     fo = open("result.txt", "a")
+    fo.write("Run nr, result: {} ".format(run))
     fo.write(results)
     fo.write("\n")
     fo.close()
