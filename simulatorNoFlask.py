@@ -5,36 +5,19 @@ import cv2
 import timeit
 import json
 #import kafka_producer
-import collections
 
 from skimage import img_as_ubyte
 from skimage.measure import block_reduce
-from flask import Flask, Response, render_template, request
 
-app = Flask(__name__)
+
+def hoho(st):
+    print(st)
 
 
 def print_response(response=None):
     if response:
         print('Error: {0}'.format(response[0].error))
         print('Offset: {0}'.format(response[0].offset))
-
-
-@app.route("/fileWalk")
-def file_walk():
-    return render_template('file_walk_page.html')
-
-
-@app.route("/fileWalk", methods=['POST'])
-def file_walk_post():
-    file_path = request.form["file_path"]
-    frequency = request.form["interval"]
-    binning = int(request.form["binning"])
-    color_channel = request.form.getlist("color_channel")
-    connect_kafka = request.form["kafka"]
-    interval = float(frequency)
-    get_files(file_path, interval, binning, color_channel, connect_kafka)
-    return "You are now streaming file names with Kafka"
 
 
 def get_files(file_path, frequency, binning, color_channel, connect_kafka):
@@ -91,13 +74,7 @@ def time_get_files(file_path, frequency, binning, color_channel, connect_kafka):
                     stop = time.clock()
                     result.append(stop-start)
             print(result)
-
-
-
-
-@app.route("/adminPanel")
-def admin():
-    return render_template("admin_panel.html")
+    return result
 
 
 # start a new test run and save score
@@ -105,27 +82,24 @@ def admin():
 # files = os.listdir(file_path)
 # output: 1. text file with freq info 2. graphs showing performance
 
-def admin_fun():
+def admin_fun(json_file):
     #test max freq - kolla hur lång tid varje steg i for-loopen tar
     #test if set freq corresponds to actual freq
     #test freq for different image sizes
 
     # input: JSON file with test settings (possible to make multiple runs at once)
-    json_file = request.form["file_path"]
     json_file = open(json_file, "r")
     run_information = json_file.read()
+    json_file.close()
     run_information = json.loads(run_information)
-
     return run_information
 
 
-@app.route("/adminPanel", methods=['POST'])
-def test_timeit():
-    runs = int(request.form["runs"])
+def test_timeit(runs):
 
     setup_template = '''
-from simulator import admin_fun, get_files
-run_information = admin_fun() 
+from simulatorNoFlask import admin_fun, get_files
+run_information = admin_fun('test.json') 
 frequency = run_information['run']['frequency']
 color_channel = run_information['run']['color_channel']
 binning = run_information['run']['binning']
@@ -133,12 +107,16 @@ file_path = run_information['run']['file_path']
 connect_kafka = run_information['run']['connect_kafka']   
     '''
 
-    for run in range(1, runs+1):
+    for run in range(runs):
         setup = setup_template.replace("'run'", "'run{}'".format(run))
         save_results(str(timeit.timeit('get_files(file_path, frequency, binning, color_channel, connect_kafka)',
                                        setup=setup, number=3)), run)
 
-    run_information = admin_fun()
+    return "test ready"
+
+
+def timer(file_path):
+    run_information = admin_fun(file_path)
     print(len(run_information))
     for run in run_information:
         frequency = run_information[run]['frequency']
@@ -146,8 +124,7 @@ connect_kafka = run_information['run']['connect_kafka']
         binning = run_information[run]['binning']
         file_path = run_information[run]['file_path']
         connect_kafka = run_information[run]['connect_kafka']
-        time_get_files(file_path, frequency, binning, color_channel, connect_kafka)
-    return "test ready"
+        create_hist(time_get_files(file_path, frequency, binning, color_channel, connect_kafka))
 
 
 def save_results(results, run):
@@ -158,5 +135,5 @@ def save_results(results, run):
     fo.close()
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
+def create_hist(data):
+    np.histogram(data)
