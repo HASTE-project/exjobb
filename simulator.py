@@ -4,7 +4,7 @@ import os
 import cv2
 import timeit
 import json
-#import kafka_producer
+import kafka_producer
 import collections
 
 from skimage import img_as_ubyte
