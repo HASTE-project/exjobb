@@ -7,45 +7,27 @@ from io import StringIO, BytesIO
 from flask import Flask, Response
 from kafka import KafkaConsumer
 
-#app = Flask(__name__)
-
-#@app.route("/")
-
-#consumer = KafkaConsumer(group_id=b"my_group_id",
-#                        bootstrap_servers=["129.16.125.242:9092"]) #,
-#                         value_deserializer = lambda m: m.decode('ascii'))
-
-#consumer.subscribe(topics=['test'])
-
 
 def main():
     consumer = KafkaConsumer(group_id=b"my_group_id",
                              bootstrap_servers=["129.16.125.231:9092"]) #,
-    #                             value_deserializer = lambda m: m.decode('ascii'))
 
     consumer.subscribe(topics=['test'])
-
-    # return Response(events(),
-    #                mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 
     def events():
         print("in events")
         for message in consumer:
-            #         if message is not None:
-            #            result='{} {} '.format(message.value, message.offset) #.append('hello') #str(message.value).decode('utf-8'))  # <--- here (str)
-            #       yield result
-            print(message.offset)
-            #           yield (b'--frame\r\n'
-            #                 b'Content-Type:image/png\r\n\r\n' + message.value + b'\r\n\r\r')
-            #save image as png
+            print(message.value)
+            ty = type(message.value)
+            print(ty)
             imgfile = BytesIO(message.value)
             img = Image.open(imgfile)
             img.save(os.path.join(os.path.expanduser('~'), str(message.offset) + ".tiff"))
 
-            with open(message.offset, 'xb') as f:
-                f.write(message.value)
+            with open(os.path.join(os.path.expanduser('~'), str(message.offset) + ".bin"), 'wb+') as f:
+                f.write(b'Content-Type: image/png\r\n\r\n' + message.value + b'\r\n\r\n')
 
             # cv2.imwrite(os.path.join(os.path.expanduser('~'), str(message.offset) + ".png"), imag)
 
