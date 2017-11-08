@@ -56,10 +56,10 @@ def main():
             #    f.close()
 
             # print(message.value)
-        #    for message in consumer:
-        # This will wait and print messages as they become available
-        # print('Offset: %s' % message.offset)
-        #       return 'Offset: %s' % message.offset
+            #    for message in consumer:
+            # This will wait and print messages as they become available
+            # print('Offset: %s' % message.offset)
+            #       return 'Offset: %s' % message.offset
     return Response(events())
 
 if __name__ == "__main__":
