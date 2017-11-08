@@ -4,7 +4,7 @@ import os
 import cv2
 import timeit
 import json
-import kafka_producer
+#import kafka_producer
 
 from skimage import img_as_ubyte
 from skimage.measure import block_reduce
@@ -17,21 +17,15 @@ def print_response(response=None):
 
 
 def get_files(file_path, frequency, binning, color_channel, connect_kafka):
-
-    for root, dirs, files in os.walk(file_path):
-        if not files:
-            pass
-        else:
-            if not dirs:
-                pass
-            for i in range(len(files)):
-                get_file(files, i, color_channel, file_path, binning, connect_kafka)
-                time.sleep(frequency)
+    files = os.listdir(file_path)
+    for file in files:
+        get_file(file, color_channel, file_path, binning, connect_kafka)
+        time.sleep(frequency)
 
 
-def get_file(files, i, color_channel, file_path, binning, connect_kafka):
-    if files[i][-5] in color_channel:
-        img = cv2.imread(file_path + files[i], -1)
+def get_file(file, color_channel, file_path, binning, connect_kafka):
+    if file[-5] in color_channel:
+        img = cv2.imread(file_path + file, -1)
         binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
         if connect_kafka == "yes":
             ret, jpeg = cv2.imencode('.png', img_as_ubyte(binned_img))
@@ -40,36 +34,32 @@ def get_file(files, i, color_channel, file_path, binning, connect_kafka):
 
 def time_get_files(file_path, frequency, binning, color_channel, connect_kafka):
     result = []
-    for root, dirs, files in os.walk(file_path):
-        if not files:
-            pass
-        else:
-            if not dirs:
-                pass
-            if frequency == 0:
-                for i in range(len(files)):
-                    start = time.clock()
-                    if files[i][-5] in color_channel:
-                        img = cv2.imread(file_path + files[i], -1)
-                        binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
-                        if connect_kafka == "yes":
-                            ret, jpeg = cv2.imencode('.png', img_as_ubyte(binned_img))
-                            kafka_producer.connect(jpeg.tobytes())
-                    stop = time.clock()
-                    result.append(stop-start)
-            else:
-                for i in range(len(files)):
-                    start = time.clock()
-                    if files[i][-5] in color_channel:
-                        img = cv2.imread(file_path + files[i], -1)
-                        binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
-                        if connect_kafka == "yes":
-                            ret, jpeg = cv2.imencode('.png', img_as_ubyte(binned_img))
-                            kafka_producer.connect(jpeg.tobytes())
-                    time.sleep(frequency)
-                    stop = time.clock()
-                    result.append(stop-start)
-            print(result)
+    files = os.listdir(file_path)
+
+    if frequency == 0:
+        for file in files:
+            start = time.clock()
+            if file[-5] in color_channel:
+                img = cv2.imread(file_path + file, -1)
+                binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
+                if connect_kafka == "yes":
+                    ret, jpeg = cv2.imencode('.png', img_as_ubyte(binned_img))
+                    kafka_producer.connect(jpeg.tobytes())
+            stop = time.clock()
+            result.append(stop-start)
+    else:
+        for file in files:
+            start = time.clock()
+            if file[-5] in color_channel:
+                img = cv2.imread(file_path + file, -1)
+                binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
+                if connect_kafka == "yes":
+                    ret, jpeg = cv2.imencode('.png', img_as_ubyte(binned_img))
+                    kafka_producer.connect(jpeg.tobytes())
+            time.sleep(frequency)
+            stop = time.clock()
+            result.append(stop-start)
+    print(result)
     return result
 
 
@@ -120,7 +110,7 @@ def timer(file_path):
         binning = run_information[run]['binning']
         file_path = run_information[run]['file_path']
         connect_kafka = run_information[run]['connect_kafka']
-        create_hist(time_get_files(file_path, frequency, binning, color_channel, connect_kafka))
+        time_get_files(file_path, frequency, binning, color_channel, connect_kafka)
 
 
 def save_results(results, run):
