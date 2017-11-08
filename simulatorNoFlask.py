@@ -10,10 +10,6 @@ from skimage import img_as_ubyte
 from skimage.measure import block_reduce
 
 
-def hoho(st):
-    print(st)
-
-
 def print_response(response=None):
     if response:
         print('Error: {0}'.format(response[0].error))
