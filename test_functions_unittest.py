@@ -17,15 +17,16 @@ class TestGetFiles(unittest.TestCase):
     #     np.array_equal(img, binned_img)
 
     def test_get_files(self):
-        file_path = "D:\\Bibliotek\Documents\Exjobb\Bilder - 20171019T090142Z-001\Bilder/"
+        file_path = "D:\Bibliotek\Documents\Exjobb\Bilder-20171019T090142Z-001\Bilder"
         frequency = 1
         binning = 2
-        color_channel = ['red', 'green']
+        color_channel = [1]
         connect_kafka = "No"
-        get_files(file_path, frequency, binning, color_channel, connect_kafka)
+        simulatorNoFlask.time_get_files(file_path, frequency, binning, color_channel, connect_kafka)
 
     def test_test_timeit(self):
         simulatorNoFlask.timer('test.json')
+
 
 if __name__ == '__main__':
     unittest.main()

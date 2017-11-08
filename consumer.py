@@ -39,14 +39,14 @@ def main():
             print(message.offset)
             #           yield (b'--frame\r\n'
             #                 b'Content-Type:image/png\r\n\r\n' + message.value + b'\r\n\r\r')
-            #safe image as png
+            #save image as png
             imgfile = BytesIO(message.value)
             img = Image.open(imgfile)
             img.save(os.path.join(os.path.expanduser('~'), str(message.offset) + ".tiff"))
 
-            #           imag = np.fromstring(message.value, sep ="/")
-            #          print("imag: {}".format(imag))
-            #         print("type(imag): {}".format(type(imag)))
+            with open(message.offset, 'xb') as f:
+                f.write(message.value)
+
             # cv2.imwrite(os.path.join(os.path.expanduser('~'), str(message.offset) + ".png"), imag)
 
             print("efter imwrite")
