@@ -4,7 +4,7 @@ import os
 import cv2
 import timeit
 import json
-#import kafka_producer
+import kafka_producer
 import collections
 
 from skimage import img_as_ubyte
@@ -38,23 +38,30 @@ def file_walk_post():
 
 
 def get_files(file_path, frequency, binning, color_channel, connect_kafka):
-
+    print('in get_files')
     for root, dirs, files in os.walk(file_path):
+       print('in for')
         if not files:
-            pass
+           print('in if')
+#           pass
         else:
             if not dirs:
-                pass
+                print('if not dirs')
+#		pass
             for i in range(len(files)):
+#		print('2 for loop')
                 get_file(files, i, color_channel, file_path, binning, connect_kafka)
                 time.sleep(frequency)
 
 
 def get_file(files, i, color_channel, file_path, binning, connect_kafka):
+    print('in get_file')
     if files[i][-5] in color_channel:
+        print('in reu color_channel')
         img = cv2.imread(file_path + files[i], -1)
         binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
         if connect_kafka == "yes":
+            print('in connect_kafka')
             ret, jpeg = cv2.imencode('.png', img_as_ubyte(binned_img))
             kafka_producer.connect(jpeg.tobytes())
 
