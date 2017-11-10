@@ -28,7 +28,7 @@ def get_file(file, color_channel, file_path, binning, connect_kafka):
         img = cv2.imread(file_path + file, -1)
         binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
         if connect_kafka == "yes":
-            ret, jpeg = cv2.imencode('.png', img_as_ubyte(binned_img))
+            ret, jpeg = cv2.imencode('.tif', img_as_ubyte(binned_img))
             kafka_producer.connect(jpeg.tobytes())
 
 
@@ -43,7 +43,7 @@ def time_get_files(file_path, frequency, binning, color_channel, connect_kafka):
                 img = cv2.imread(file_path + file, -1)
                 binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
                 if connect_kafka == "yes":
-                    ret, jpeg = cv2.imencode('.png', img_as_ubyte(binned_img))
+                    ret, jpeg = cv2.imencode('.tif', img_as_ubyte(binned_img))
                     kafka_producer.connect(jpeg.tobytes())
             stop = time.clock()
             result.append(stop-start)
@@ -54,7 +54,7 @@ def time_get_files(file_path, frequency, binning, color_channel, connect_kafka):
                 img = cv2.imread(file_path + file, -1)
                 binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
                 if connect_kafka == "yes":
-                    ret, jpeg = cv2.imencode('.png', img_as_ubyte(binned_img))
+                    ret, jpeg = cv2.imencode('.tif', img_as_ubyte(binned_img))
                     kafka_producer.connect(jpeg.tobytes())
             time.sleep(frequency)
             stop = time.clock()
