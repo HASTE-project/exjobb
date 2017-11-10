@@ -17,7 +17,8 @@ class TestGetFiles(unittest.TestCase):
     #     np.array_equal(img, binned_img)
 
     def test_get_files(self):
-        file_path = "D:\Bibliotek\Documents\Exjobb\Bilder-20171019T090142Z-001\Bilder"
+#        file_path = "D:\Bibliotek\Documents\Exjobb\Bilder-20171019T090142Z-001\Bilder"
+        file_path = "/mnt/volume/fromAl/Data_20151215 HepG2 LNP size exp live cell 24h_20151215_110422/AssayPlate_NUNC_#165305-1/"
         frequency = 1
         binning = 2
         color_channel = [1]
