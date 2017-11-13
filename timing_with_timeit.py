@@ -21,9 +21,18 @@ connect_kafka = run_information['run']['connect_kafka']
 
     return "test ready"
 
+
 def read_from_json(json_file):
     json_file = open(json_file, "r")
     run_information = json_file.read()
     json_file.close()
     run_information = json.loads(run_information)
     return run_information
+
+
+def save_results(results, run):
+    fo = open("result.txt", "a")
+    fo.write("Run nr, result: {} ".format(run))
+    fo.write(results)
+    fo.write("\n")
+    fo.close()

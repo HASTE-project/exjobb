@@ -6,6 +6,7 @@ from skimage.measure import block_reduce
 import simulatorNoFlask
 import os
 import create_test_data
+import profiling
 
 class TestGetFiles(unittest.TestCase):
     """Tests for get_files"""
@@ -24,15 +25,15 @@ class TestGetFiles(unittest.TestCase):
         binning = 2
         color_channel = [1]
         connect_kafka = "No"
-        simulatorNoFlask.time_get_files(file_path, frequency, binning, color_channel, connect_kafka)
+        profiling.time_get_files(file_path, frequency, binning, color_channel, connect_kafka)
 
     def test_test_timeit(self):
-        simulatorNoFlask.timer('test.json')
+        profiling.timer('test.json')
 
-    def test_create_test_data(self):
-        create_test_data.create_test_images("C:\\Users\Lovisa\exjobb\\testData/", 3)
-        print(os.path.getsize("testData\AssayPlate_NUNC_#165305-1_B02_T0001F001L01A01Z01C02.tif"))
-        print(os.path.getsize("bild.tif"))
+    # def test_create_test_data(self):
+    #     create_test_data.create_test_images("C:\\Users\Lovisa\exjobb\\testData/", 3)
+    #     print(os.path.getsize("testData\AssayPlate_NUNC_#165305-1_B02_T0001F001L01A01Z01C02.tif"))
+    #     print(os.path.getsize("bild.tif"))
 
 
 if __name__ == '__main__':

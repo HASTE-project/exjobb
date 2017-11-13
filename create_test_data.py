@@ -8,7 +8,6 @@ from skimage.measure import block_reduce
 
 
 def create_test_images(source, dest, binning):
-
     files = os.listdir(source)
     original_size = []
     size_after_binning = []
@@ -36,19 +35,18 @@ def create_test_images(source, dest, binning):
     try:
         fo = open("file_information.txt", "a")
         fo.write("\n Binning: {} ".format(binning))
-        fo.write("\n sum_size_after_bin/sum_org_size: {}".format(sum_size_after_bin/sum_org_size))
+        fo.write("\n sum_size_after_bin/sum_org_size: {}".format(sum_size_after_bin / sum_org_size))
         fo.write("\n original_size: {}".format(original_size))
         fo.write("\n size_after_binning: {}".format(size_after_binning))
         fo.write("\n")
         fo.close()
-        print(sum_size_after_bin/sum_org_size)
+        print(sum_size_after_bin / sum_org_size)
     except ZeroDivisionError:
         print(sum_org_size)
         print(sum_size_after_bin)
 
 
-
-#create_test_images("D:\Bibliotek\Documents\Exjobb\Bilder-20171019T090142Z-001\Bilder/",
+# create_test_images("D:\Bibliotek\Documents\Exjobb\Bilder-20171019T090142Z-001\Bilder/",
 #                   "D:\Bibliotek\Documents\Exjobb\Bilder-20171019T090142Z-001/", 1)
 # create_test_images("D:\Bibliotek\Documents\Exjobb\Bilder-20171019T090142Z-001\Bilder/",2)
 # create_test_images("D:\Bibliotek\Documents\Exjobb\Bilder-20171019T090142Z-001\Bilder/",3)
@@ -56,24 +54,25 @@ def create_test_images(source, dest, binning):
 # create_test_images("D:\Bibliotek\Documents\Exjobb\Bilder-20171019T090142Z-001\Bilder/",5)
 # create_test_images("D:\Bibliotek\Documents\Exjobb\Bilder-20171019T090142Z-001\Bilder/",6)
 
-#create_test_images("/mnt/volume/fromAl/Data_20151215 HepG2 LNP size exp live cell 24h_20151215_110422/AssayPlate_NUNC_#165305-1/",
+# create_test_images("/mnt/volume/fromAl/Data_20151215 HepG2 LNP size exp live cell 24h_20151215_110422/AssayPlate_NUNC_#165305-1/",
 #                   "/mnt/volume2//testDatasets/", 1)
-#create_test_images("/mnt/volume/fromAl/Data_20151215 HepG2 LNP size exp live cell 24h_20151215_110422/AssayPlate_NUNC_#165305-1/",
+# create_test_images("/mnt/volume/fromAl/Data_20151215 HepG2 LNP size exp live cell 24h_20151215_110422/AssayPlate_NUNC_#165305-1/",
 #                   "/mnt/volume2//testDatasets/",2)
-#create_test_images("/mnt/volume/fromAl/Data_20151215 HepG2 LNP size exp live cell 24h_20151215_110422/AssayPlate_NUNC_#165305-1/",
+# create_test_images("/mnt/volume/fromAl/Data_20151215 HepG2 LNP size exp live cell 24h_20151215_110422/AssayPlate_NUNC_#165305-1/",
 #                   "/mnt/volume2//testDatasets/",3)
-#create_test_images("/mnt/volume/fromAl/Data_20151215 HepG2 LNP size exp live cell 24h_20151215_110422/AssayPlate_NUNC_#165305-1/",
+# create_test_images("/mnt/volume/fromAl/Data_20151215 HepG2 LNP size exp live cell 24h_20151215_110422/AssayPlate_NUNC_#165305-1/",
 #                   "/mnt/volume2//testDatasets/",4)
-#create_test_images("/mnt/volume/fromAl/Data_20151215 HepG2 LNP size exp live cell 24h_20151215_110422/AssayPlate_NUNC_#165305-1/",
+# create_test_images("/mnt/volume/fromAl/Data_20151215 HepG2 LNP size exp live cell 24h_20151215_110422/AssayPlate_NUNC_#165305-1/",
 #                   "/mnt/volume2//testDatasets/",5)
-#create_test_images("/mnt/volume/fromAl/Data_20151215 HepG2 LNP size exp live cell 24h_20151215_110422/AssayPlate_NUNC_#165305-1/",
+# create_test_images("/mnt/volume/fromAl/Data_20151215 HepG2 LNP size exp live cell 24h_20151215_110422/AssayPlate_NUNC_#165305-1/",
 #                   "/mnt/volume2//testDatasets/",6)
 
 
 def org_file(source, dest):
-	file = "AssayPlate_NUNC_#165305-1_F05_T0038F002L01A02Z01C01.tif"
-	for i in range(500):
-		shutil.copy2(source + file, dest + "0" + str(i) + file)
+    file = "AssayPlate_NUNC_#165305-1_F05_T0038F002L01A02Z01C01.tif"
+    for i in range(500):
+        shutil.copy2(source + file, dest + "0" + str(i) + file)
 
-org_file("/mnt/volume/fromAl/Data_20151215 HepG2 LNP size exp live cell 24h_20151215_110422/AssayPlate_NUNC_#165305-1/",
-                   "/mnt/volume2//testDatasets/0/")
+#
+# org_file("/mnt/volume/fromAl/Data_20151215 HepG2 LNP size exp live cell 24h_20151215_110422/AssayPlate_NUNC_#165305-1/",
+#          "/mnt/volume2//testDatasets/0/")
