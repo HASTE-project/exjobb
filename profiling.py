@@ -71,9 +71,8 @@ def timer(file_path):
 
 
 def save_results(results, run):
-    fo = open("result.txt", "a")
-    fo.write("Run: {} ".format(run))
-    fo.write("result: {}".format(results))
+    fo = open(run + "result.txt", "a")
+    fo.write(results)
     fo.write("\n")
     fo.close()
 
