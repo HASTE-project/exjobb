@@ -26,15 +26,16 @@ def time_get_files(file_path, frequency, binning, color_channel, connect_kafka):
     if frequency == 0:
         for file in files:
             start = time.clock()
-            try:
+            #try:
+            if os.path.isfile(file_path + file):
                 if file[-5] in color_channel:
                     img = cv2.imread(file_path + file, -1)
                     binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
                     if connect_kafka == "yes":
                         ret, jpeg = cv2.imencode('.tif', img_as_ubyte(binned_img))
                         kafka_producer.connect(jpeg.tobytes())
-            except: #skip if there is a directory
-                pass
+            #except: #skip if there is a directory
+            #    pass
             stop = time.clock()
             result.append(stop-start)
     else:
