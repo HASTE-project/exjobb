@@ -8,10 +8,12 @@ from skimage.measure import block_reduce
 
 
 def create_test_images(source, dest, binning):
+
     files = os.listdir(source)
     original_size = []
     size_after_binning = []
     if not os.path.exists(dest + str(binning)):
+        print("in if")
         os.mkdir(dest + str(binning))
     for file in files:
         if os.path.isfile(source + file):
@@ -46,7 +48,7 @@ def create_test_images(source, dest, binning):
 
 
 create_test_images("D:\Bibliotek\Documents\Exjobb\Bilder-20171019T090142Z-001\Bilder/",
-                   "D:\Bibliotek\Documents\Exjobb\Bilder-20171019T090142Z-001\Bilder/", 1)
+                   "D:\Bibliotek\Documents\Exjobb\Bilder-20171019T090142Z-001/", 1)
 # create_test_images("D:\Bibliotek\Documents\Exjobb\Bilder-20171019T090142Z-001\Bilder/",2)
 # create_test_images("D:\Bibliotek\Documents\Exjobb\Bilder-20171019T090142Z-001\Bilder/",3)
 # create_test_images("D:\Bibliotek\Documents\Exjobb\Bilder-20171019T090142Z-001\Bilder/",4)
