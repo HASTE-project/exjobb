@@ -13,6 +13,7 @@ import os
 import numpy as np
 import time
 import cv2
+import csv
 #import kafka_producer
 
 from skimage.measure import block_reduce
@@ -26,7 +27,6 @@ def time_get_files(file_path, frequency, binning, color_channel, connect_kafka):
     if frequency == 0:
         for file in files:
             start = time.clock()
-            #try:
             if os.path.isfile(file_path + file):
                 if file[-5] in color_channel:
                     img = cv2.imread(file_path + file, -1)
@@ -34,8 +34,6 @@ def time_get_files(file_path, frequency, binning, color_channel, connect_kafka):
                     if connect_kafka == "yes":
                         ret, jpeg = cv2.imencode('.tif', img_as_ubyte(binned_img))
                         kafka_producer.connect(jpeg.tobytes())
-            #except: #skip if there is a directory
-            #    pass
             stop = time.clock()
             result.append(stop-start)
     else:
@@ -67,15 +65,12 @@ def timer(file_path):
         file_path = run_information[run]['file_path']
         connect_kafka = run_information[run]['connect_kafka']
         result = time_get_files(file_path, frequency, binning, color_channel, connect_kafka)
-        save_results(str(result), run)
+        save_as_csv(result, run)
 
 
-def save_results(results, run):
-    fo = open(run + "result.txt", "a")
-    fo.write(results)
-    fo.write("\n")
-    fo.close()
+def save_as_csv(results, run):
+    with open(run + "result.csv", "w") as f:
+        wr = csv.writer(f)
+        wr.writerow(results)
 
 
-def create_hist(data):
-    np.histogram(data)
