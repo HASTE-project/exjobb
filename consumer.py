@@ -19,7 +19,7 @@ def main():
     def events():
         print("in events")
         for message in consumer:
-            print(message.value)
+            #print(message.value)
             ty = type(message.value)
             print(ty)
             imgfile = BytesIO(message.value)

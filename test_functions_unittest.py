@@ -2,7 +2,7 @@ import unittest
 import cv2
 import numpy as np
 from skimage.measure import block_reduce
-#from simulator import get_files
+import simulator
 import simulatorNoFlask
 import os
 import create_test_data
@@ -29,6 +29,17 @@ class TestGetFiles(unittest.TestCase):
 
     def test_test_timeit(self):
         profiling.timer('test.json')
+
+    def test_simulator_get_files(self):
+        file_path = '/mnt/volume/fromAl/Data_20151215 HepG2 LNP size exp live cell 24h_20151215_110422/AssayPlate_NUNC_#165305-1/'
+        frequency = 1
+        binning = 1
+        color_channel = ['1', '2', '3']
+        connect_kafka = 'yes'
+        simulator.get_files(file_path, frequency, binning, color_channel, connect_kafka)
+
+ 
+
 
     # def test_create_test_data(self):
     #     create_test_data.create_test_images("C:\\Users\Lovisa\exjobb\\testData/", 3)
