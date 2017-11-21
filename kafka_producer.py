@@ -3,8 +3,6 @@ import random
 import threading
 import time
 
-import cv2
-from flask import Flask, render_template, request
 from kafka import SimpleProducer, KafkaClient
 from kafka.common import LeaderNotAvailableError
 

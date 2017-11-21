@@ -1,9 +1,7 @@
-import time, random
+import time
 import numpy as np
 import os
 import cv2
-import timeit
-import json
 #import kafka_producer
 
 from skimage import img_as_ubyte
@@ -24,6 +22,7 @@ def get_files(file_path, frequency, binning, color_channel, connect_kafka):
 
 
 def get_file(file, color_channel, file_path, binning, connect_kafka):
+    print("in get file")
     if file[-5] in color_channel:
         img = cv2.imread(file_path + file, -1)
         binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)

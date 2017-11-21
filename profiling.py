@@ -30,6 +30,7 @@ def time_get_files(file_path, frequency, binning, color_channel, connect_kafka):
             if os.path.isfile(file_path + file):
                 if file[-5] in color_channel:
                     img = cv2.imread(file_path + file, -1)
+                    print(type(img))
                     binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
                     if connect_kafka == "yes":
                         ret, jpeg = cv2.imencode('.tif', img_as_ubyte(binned_img))
