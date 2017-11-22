@@ -31,7 +31,7 @@ def main():
             print("size img: {}".format(img.shape))
             fin2 = Image.fromarray(img)
             print("fin2 type: {}".format(type(fin2)))
-            fin2.save("fin2.tiff")
+            fin2.save(str(message.offset) + ".tif")
 
             # with open(os.path.join(os.path.expanduser('~'), str(message.offset) + ".bin"), 'wb+') as f:
             #     f.write(b'Content-Type: image/png\r\n\r\n' + message.value + b'\r\n\r\n')
