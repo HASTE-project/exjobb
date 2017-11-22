@@ -51,7 +51,12 @@ def get_files(file_path, frequency, binning, color_channel, connect_kafka):
 #		pass
             for i in range(len(files)):
 #		print('2 for loop')
+
                 simulatorNoFlask.get_file(files, color_channel, file_path, binning, connect_kafka)
+
+                get_file(files, i, color_channel, file_path, binning, connect_kafka)
+#                simulatorNoFlask.get_file(files, color_channel, file_path, binning, connect_kafka)
+
                 time.sleep(frequency)
 
 
