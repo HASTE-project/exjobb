@@ -19,15 +19,22 @@ def main():
     def events():
         print("in events")
         for message in consumer:
-            print(message.value)
+            #print(message.value)
             ty = type(message.value)
             print(ty)
-            imgfile = BytesIO(message.value)
-            img = Image.open(imgfile)
-            img.save(os.path.join(os.path.expanduser('~'), str(message.offset) + ".tiff"))
+            # imgfile = BytesIO(message.value)
+            # img = Image.open(imgfile)
+            # img.save(os.path.join(os.path.expanduser('~'), str(message.offset) + ".tiff"))
 
-            with open(os.path.join(os.path.expanduser('~'), str(message.offset) + ".bin"), 'wb+') as f:
-                f.write(b'Content-Type: image/png\r\n\r\n' + message.value + b'\r\n\r\n')
+            img = cv2.imdecode(np.frombuffer(message.value, dtype=np.uint16), -1)
+            print("type img : {}".format(type(img)))
+            print("size img: {}".format(img.shape))
+            fin2 = Image.fromarray(img)
+            print("fin2 type: {}".format(type(fin2)))
+            fin2.save("fin2.tiff")
+
+            # with open(os.path.join(os.path.expanduser('~'), str(message.offset) + ".bin"), 'wb+') as f:
+            #     f.write(b'Content-Type: image/png\r\n\r\n' + message.value + b'\r\n\r\n')
 
             # cv2.imwrite(os.path.join(os.path.expanduser('~'), str(message.offset) + ".png"), imag)
 

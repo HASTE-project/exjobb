@@ -15,3 +15,6 @@ venv.bak/
 result.txt
 test.json
 file_information.txt
+
+*.tif
+*.csv
