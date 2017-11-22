@@ -7,7 +7,7 @@ import timeit
 import json
 import kafka_producer
 
-from skimage import img_as_ubyte
+from skimage import img_as_uint
 from skimage.measure import block_reduce
 
 
@@ -36,7 +36,7 @@ def get_file(file, color_channel, file_path, binning, connect_kafka):
         binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
         if connect_kafka == "yes":
             print('kafka conncent')
-            ret, jpeg = cv2.imencode('.tif', img_as_ubyte(binned_img))
+            ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
             kafka_producer.connect(jpeg.tobytes())
 
 
