@@ -16,5 +16,5 @@ result.txt
 test.json
 file_information.txt
 
-*.tif
+#*.tif
 *.csv
