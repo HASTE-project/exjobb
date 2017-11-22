@@ -3,6 +3,7 @@ import numpy as np
 import os
 import cv2
 
+import sys
 import timeit
 import json
 import kafka_producer
@@ -37,6 +38,7 @@ def get_file(file, color_channel, file_path, binning, connect_kafka):
         if connect_kafka == "yes":
             print('kafka conncent')
             ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
+            print("size: {}".format(sys.getsizeof(jpeg.tobytes())))
             kafka_producer.connect(jpeg.tobytes())
 
 
