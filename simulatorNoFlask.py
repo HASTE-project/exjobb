@@ -39,6 +39,7 @@ def get_file(file, color_channel, file_path, binning, connect_kafka):
             print('kafka conncent')
             ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
             print("size: {}".format(sys.getsizeof(jpeg.tobytes())))
+            print(file)
             kafka_producer.connect(jpeg.tobytes())
 
 
