@@ -4,8 +4,6 @@ import os
 import cv2
 
 import sys
-import timeit
-import json
 import kafka_producer
 
 from skimage import img_as_uint
@@ -19,6 +17,7 @@ def print_response(response=None):
 
 
 def get_files(file_path, frequency, binning, color_channel, connect_kafka):
+
     print('in get files')
     files = os.listdir(file_path)
     for file in files:
@@ -28,8 +27,6 @@ def get_files(file_path, frequency, binning, color_channel, connect_kafka):
 
 
 def get_file(file, color_channel, file_path, binning, connect_kafka):
-
-
     print('in get file simNoFlask')
     if file[-5] in color_channel:
         print('color channel ok')
@@ -43,4 +40,3 @@ def get_file(file, color_channel, file_path, binning, connect_kafka):
             kafka_producer.connect(jpeg.tobytes())
 
 
- 

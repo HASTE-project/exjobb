@@ -6,6 +6,11 @@ import time
 from kafka import SimpleProducer, KafkaClient
 from kafka.common import LeaderNotAvailableError
 
+# def connect():
+#     kafka = KafkaClient("129.16.125.231:9092")
+#     producer = SimpleProducer(kafka)
+#     topic = 'test'
+#     return [topic, producer]
 
 def connect(message):
     kafka = KafkaClient("129.16.125.231:9092")

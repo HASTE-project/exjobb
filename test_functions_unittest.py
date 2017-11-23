@@ -5,8 +5,8 @@ from _ctypes import sizeof
 import cv2
 import numpy as np
 from skimage.measure import block_reduce
-import simulator
-import simulatorNoFlask
+#import simulator
+#import simulatorNoFlask
 import os
 import create_test_data
 import profiling
@@ -60,9 +60,6 @@ class TestGetFiles(unittest.TestCase):
         img_bytes = jpeg.tobytes()
         print("img_bytes type: {}".format(type(img_bytes)))
 
-        # fin = Image.fromarray(binned_img)
-        # print("fin type: {}".format(type(fin)))
-        # fin.save("fin.tiff")
 
 
         #in consumer
@@ -71,7 +68,7 @@ class TestGetFiles(unittest.TestCase):
         print("size img: {}".format(img.shape))
         fin2 = Image.fromarray(img)
         print("fin2 type: {}".format(type(fin2)))
-        fin2.save("fin2.tiff")
+        fin2.save("fin22.tif")
 
         assert (np.array_equal(img, imgfile))
 
