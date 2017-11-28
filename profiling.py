@@ -85,6 +85,8 @@ def timer_kafka(file_path, to_time):
         connect_kafka = run_information[run]['connect_kafka']
         if to_time == "p":
             result = time_kafka_producer(file_path, frequency, binning, color_channel, connect_kafka)
+        elif to_time == "p2":
+            result = time_kafka_producer2(file_path, frequency, binning, color_channel, connect_kafka) 
         elif to_time == "c":
             result = time_kafka_consumer(file_path, frequency, binning, color_channel, connect_kafka)
         elif to_time == "g":
