@@ -146,16 +146,19 @@ def time_kafka_producer2(file_path, frequency, binning, color_channel, connect_k
                     if connect_kafka == "yes":
                         ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
                         as_bytes = jpeg.tobytes()
-                        start = time.clock()
+                        #start = time.clock()
                         #kafka_producer.connect(as_bytes)
                         try:
+                            start = time.clock()
                             producer.send_messages(topic, as_bytes)
+                            stop = time.clock()
+                            result.append(stop-start)
                         except LeaderNotAvailableError:
                             # https://github.com/mumrah/kafka-python/issues/249
                             time.sleep(1)
                             print_response(producer.send_messages(topic, as_bytes))
-                        stop = time.clock()
-                        result.append(stop-start)
+                        #stop = time.clock()
+                        #result.append(stop-start)
     else:
         for file in files:
             if os.path.isfile(file_path + file):
@@ -165,17 +168,21 @@ def time_kafka_producer2(file_path, frequency, binning, color_channel, connect_k
                     if connect_kafka == "yes":
                         ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
                         as_bytes = jpeg.tobytes()
-                        start = time.clock()
+                        #start = time.clock()
                        # kafka_producer.connect(as_bytes)
                         try:
+                            start = time.clock()
                             producer.send_messages(topic, as_bytes)
+                            time.sleep(frequency)
+                            stop = time.clock()
+                            result.append(stop-start)
                         except LeaderNotAvailableError:
                             # https://github.com/mumrah/kafka-python/issues/249
                             time.sleep(1)
                             print_response(producer.send_messages(topic, as_bytes))
-                        time.sleep(frequency)
-                        stop = time.clock()
-                        result.append(stop-start)
+                        #time.sleep(frequency)
+                        #stop = time.clock()
+                        #result.append(stop-start)
         kafka.close()
     return result
 
