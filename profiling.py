@@ -14,7 +14,7 @@ import numpy as np
 import time
 import cv2
 import csv
-#import kafka_producer
+import kafka_producer
 
 from skimage.measure import block_reduce
 from skimage import img_as_uint
@@ -30,7 +30,7 @@ def time_get_files(file_path, frequency, binning, color_channel, connect_kafka):
             if os.path.isfile(file_path + file):
                 if file[-5] in color_channel:
                     img = cv2.imread(file_path + file, -1)
-                    print(type(img))
+                    #print(type(img))
                     binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
                     if connect_kafka == "yes":
                         ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
@@ -99,7 +99,7 @@ def time_kafka_producer(file_path, frequency, binning, color_channel, connect_ka
             if os.path.isfile(file_path + file):
                 if file[-5] in color_channel:
                     img = cv2.imread(file_path + file, -1)
-                    print(type(img))
+                    #print(type(img))
                     binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
                     if connect_kafka == "yes":
                         ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
