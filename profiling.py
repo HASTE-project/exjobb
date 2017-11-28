@@ -16,6 +16,9 @@ import cv2
 import csv
 import kafka_producer
 
+from kafka import SimpleProducer, KafkaClient
+from kafka.common import LeaderNotAvailableError
+
 from skimage.measure import block_reduce
 from skimage import img_as_uint
 
@@ -124,6 +127,61 @@ def time_kafka_producer(file_path, frequency, binning, color_channel, connect_ka
                         result.append(stop-start)
     return result
 
+
+def time_kafka_producer2(file_path, frequency, binning, color_channel, connect_kafka):
+    kafka = KafkaClient("129.16.125.249:9092")
+    producer = SimpleProducer(kafka)
+    topic = 'test'
+    result = []
+    files = os.listdir(file_path)
+    if frequency == 0:
+        for file in files:
+            if os.path.isfile(file_path + file):
+                if file[-5] in color_channel:
+                    img = cv2.imread(file_path + file, -1)
+                    #print(type(img))
+                    binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
+                    if connect_kafka == "yes":
+                        ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
+                        as_bytes = jpeg.tobytes()
+                        start = time.clock()
+                        #kafka_producer.connect(as_bytes)
+                        try:
+                            producer.send_messages(topic, as_bytes)
+                        except LeaderNotAvailableError:
+                            # https://github.com/mumrah/kafka-python/issues/249
+                            time.sleep(1)
+                            print_response(producer.send_messages(topic, as_bytes))
+                        stop = time.clock()
+                        result.append(stop-start)
+    else:
+        for file in files:
+            if os.path.isfile(file_path + file):
+                if file[-5] in color_channel:
+                    img = cv2.imread(file_path + file, -1)
+                    binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
+                    if connect_kafka == "yes":
+                        ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
+                        as_bytes = jpeg.tobytes()
+                        start = time.clock()
+                       # kafka_producer.connect(as_bytes)
+                        try:
+                            producer.send_messages(topic, as_bytes)
+                        except LeaderNotAvailableError:
+                            # https://github.com/mumrah/kafka-python/issues/249
+                            time.sleep(1)
+                            print_response(producer.send_messages(topic, as_bytes))
+                        time.sleep(frequency)
+                        stop = time.clock()
+                        result.append(stop-start)
+        kafka.close()
+    return result
+
+
+def print_response(response=None):
+    if response:
+        print('Error: {0}'.format(response[0].error))
+        print('Offset: {0}'.format(response[0].offset))
 
 def time_kafka_consumer(file_path, frequency, binning, color_channel, connect_kafka):
     result = []
