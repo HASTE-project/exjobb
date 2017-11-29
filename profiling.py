@@ -15,6 +15,7 @@ import time
 import cv2
 import csv
 import kafka_producer
+import sys
 
 from kafka import SimpleProducer, KafkaClient
 from kafka.common import LeaderNotAvailableError
@@ -187,10 +188,31 @@ def time_kafka_producer2(file_path, frequency, binning, color_channel, connect_k
     return result
 
 
+def timer_kafka_100bytes():
+    kafka = KafkaClient("129.16.125.249:9092")
+    producer = SimpleProducer(kafka)
+    topic = 'test'
+    result = []
+    message = b"0" * 100
+    print(sys.getsizeof(message))
+    for i in range(1000):
+        try:
+            start = time.clock()
+            producer.send_messages(topic, message)
+            stop = time.clock()
+            result.append(stop - start)
+        except LeaderNotAvailableError:
+            # https://github.com/mumrah/kafka-python/issues/249
+            time.sleep(1)
+            print_response(producer.send_messages(topic, message))
+    kafka.close()
+
+
 def print_response(response=None):
     if response:
         print('Error: {0}'.format(response[0].error))
         print('Offset: {0}'.format(response[0].offset))
+
 
 def time_kafka_consumer(file_path, frequency, binning, color_channel, connect_kafka):
     result = []
