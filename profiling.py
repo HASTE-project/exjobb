@@ -193,7 +193,7 @@ def timer_kafka_100bytes():
     producer = SimpleProducer(kafka)
     topic = 'test'
     result = []
-    message = b"0" * 100
+    message = b"0" * 67 #overhead of 33 bytes 
     print(sys.getsizeof(message))
     for i in range(1000):
         try:
@@ -206,6 +206,8 @@ def timer_kafka_100bytes():
             time.sleep(1)
             print_response(producer.send_messages(topic, message))
     kafka.close()
+    save_as_csv(result, "100bytes")
+
 
 
 def print_response(response=None):
