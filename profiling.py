@@ -14,11 +14,11 @@ import numpy as np
 import time
 import cv2
 import csv
-import kafka_producer
+#import kafka_producer
 import sys
-
-from kafka import SimpleProducer, KafkaClient
-from kafka.common import LeaderNotAvailableError
+#
+# from kafka import SimpleProducer, KafkaClient
+# from kafka.common import LeaderNotAvailableError
 
 from skimage.measure import block_reduce
 from skimage import img_as_uint
@@ -42,8 +42,9 @@ def time_get_files(file_path, frequency, binning, color_channel, connect_kafka):
             stop = time.clock()
             result.append(stop-start)
     else:
+        print("freq!=0")
         for file in files:
-            start = time.clock()
+            start = time.perf_counter()
             if os.path.isfile(file_path + file):
                 if file[-5] in color_channel:
                     img = cv2.imread(file_path + file, -1)
@@ -52,7 +53,7 @@ def time_get_files(file_path, frequency, binning, color_channel, connect_kafka):
                         ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
                         kafka_producer.connect(jpeg.tobytes())
             time.sleep(frequency)
-            stop = time.clock()
+            stop = time.perf_counter()
             result.append(stop-start)
     return result
 
@@ -93,7 +94,8 @@ def timer_kafka(file_path, to_time):
         elif to_time == "g":
             result = time_get_files(file_path, frequency, binning, color_channel, connect_kafka)
         else:
-            raise AssertionError("Specify what to time (p=producer, c=consumer, g=get_files)")
+            raise AssertionError("Specify what to time (p=producer, p2=producer (already connected to Kafka)"
+                                 " c=consumer, g=get_files)")
         save_as_csv(result, run)
 
 
