@@ -217,9 +217,9 @@ def print_response(response=None):
         print('Offset: {0}'.format(response[0].offset))
 
 
-def time_kafka_consumer(file_path, frequency, binning, color_channel, connect_kafka):
+def time_kafka_consumer():
     result = []
-    files = os.listdir(file_path)
+   # files = os.listdir(file_path)
 
     consumer = KafkaConsumer(group_id=b"my_group_id",
                              bootstrap_servers=["130.239.81.54:9092"])  # ,
