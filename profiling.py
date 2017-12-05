@@ -88,7 +88,7 @@ def timer_kafka(file_path, to_time):
         if to_time == "p":
             result = time_kafka_producer(file_path, frequency, binning, color_channel, connect_kafka)
         elif to_time == "p2":
-            result = time_kafka_producer2(file_path, frequency, binning, color_channel, connect_kafka) 
+            result = time_kafka_producer2(file_path, frequency, binning, color_channel, connect_kafka)
         elif to_time == "c":
             result = time_kafka_consumer(file_path, frequency, binning, color_channel, connect_kafka)
         elif to_time == "g":
@@ -172,7 +172,7 @@ def time_kafka_producer2(file_path, frequency, binning, color_channel, connect_k
                         ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
                         as_bytes = jpeg.tobytes()
                         #start = time.clock()
-                       # kafka_producer.connect(as_bytes)
+                        # kafka_producer.connect(as_bytes)
                         try:
                             start = time.clock()
                             producer.send_messages(topic, as_bytes)
@@ -222,61 +222,29 @@ def time_kafka_consumer(file_path, frequency, binning, color_channel, connect_ka
     files = os.listdir(file_path)
 
     consumer = KafkaConsumer(group_id=b"my_group_id",
-                             bootstrap_servers=["129.16.125.231:9092"])  # ,
+                             bootstrap_servers=["130.239.81.54:9092"])  # ,
 
     consumer.subscribe(topics=['test'])
 
-    def events():
-        print("in events")
-        for message in consumer:
-            # print(message.value)
-            ty = type(message.value)
-            print(ty)
-            # imgfile = BytesIO(message.value)
-            # img = Image.open(imgfile)
-            # img.save(os.path.join(os.path.expanduser('~'), str(message.offset) + ".tiff"))
-
-            img = cv2.imdecode(np.frombuffer(message.value, dtype=np.uint16), -1)
-            print("type img : {}".format(type(img)))
-            print("size img: {}".format(img.shape))
-            fin2 = Image.fromarray(img)
-            print("fin2 type: {}".format(type(fin2)))
-            fin2.save(str(message.offset) + ".tif")
-
-
-
-
-
-    if frequency == 0:
-        for file in files:
-            if os.path.isfile(file_path + file):
-                if file[-5] in color_channel:
-                    img = cv2.imread(file_path + file, -1)
-                    #print(type(img))
-                    binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
-                    if connect_kafka == "yes":
-                        ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
-                        start = time.clock()
-                        kafka_producer.connect(jpeg.tobytes())
-                        stop = time.clock()
-                        result.append(stop-start)
-    else:
-        for file in files:
-            if os.path.isfile(file_path + file):
-                if file[-5] in color_channel:
-                    img = cv2.imread(file_path + file, -1)
-                    binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
-                    if connect_kafka == "yes":
-                        ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
-                        start = time.clock()
-                        kafka_producer.connect(jpeg.tobytes())
-                        time.sleep(frequency)
-                        stop = time.clock()
-                        result.append(stop-start)
+    #   def events():
+    print("in events")
+    for message in consumer:
+        # print(message.value)
+        ty = type(message.value)
+        print(ty)
+        # imgfile = BytesIO(message.value)
+        # img = Image.open(imgfile)
+        # img.save(os.path.join(os.path.expanduser('~'), str(message.offset) + ".tiff"))
+        start = time.clock()
+        img = cv2.imdecode(np.frombuffer(message.value, dtype=np.uint16), -1)
+       # print("type img : {}".format(type(img)))
+       # print("size img: {}".format(img.shape))
+        fin2 = Image.fromarray(img)
+        #print("fin2 type: {}".format(type(fin2)))
+        stop = time.clock()
+        result.append(stop-start)
+        fin2.save(str(message.offset) + ".tif")
     return result
-
-
-
 
 
 def save_as_csv(results, run):
