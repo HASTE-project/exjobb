@@ -26,12 +26,12 @@ def main():
             # img = Image.open(imgfile)
             # img.save(os.path.join(os.path.expanduser('~'), str(message.offset) + ".tiff"))
 
-            img = cv2.imdecode(np.frombuffer(message.value, dtype=np.uint16), -1)
-            print("type img : {}".format(type(img)))
-            print("size img: {}".format(img.shape))
-            fin2 = Image.fromarray(img)
-            print("fin2 type: {}".format(type(fin2)))
-            fin2.save(str(message.offset) + ".tif")
+             img = cv2.imdecode(np.frombuffer(message.value, dtype=np.uint16), -1)
+             print("type img : {}".format(type(img)))
+             print("size img: {}".format(img.shape))
+             fin2 = Image.fromarray(img)
+             print("fin2 type: {}".format(type(fin2)))
+             fin2.save(str(message.offset) + ".tif")
 
             # with open(os.path.join(os.path.expanduser('~'), str(message.offset) + ".bin"), 'wb+') as f:
             #     f.write(b'Content-Type: image/png\r\n\r\n' + message.value + b'\r\n\r\n')
