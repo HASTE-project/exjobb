@@ -8,6 +8,7 @@
 # input: JSON file with test settings (possible to make multiple runs at once)
 # output: 1. text file with freq info 2. graphs showing performance
 
+from PIL import Image
 import json
 import os
 import numpy as np
@@ -19,6 +20,7 @@ import sys
 #
 from kafka import SimpleProducer, KafkaClient
 from kafka.common import LeaderNotAvailableError
+from kafka import KafkaConsumer
 
 from skimage.measure import block_reduce
 from skimage import img_as_uint
@@ -89,8 +91,6 @@ def timer_kafka(file_path, to_time):
             result = time_kafka_producer(file_path, frequency, binning, color_channel, connect_kafka)
         elif to_time == "p2":
             result = time_kafka_producer2(file_path, frequency, binning, color_channel, connect_kafka)
-        elif to_time == "c":
-                result = time_kafka_consumer(file_path, frequency, binning, color_channel, connect_kafka)
         elif to_time == "g":
             result = time_get_files(file_path, frequency, binning, color_channel, connect_kafka)
         else:
@@ -98,6 +98,9 @@ def timer_kafka(file_path, to_time):
                                  " c=consumer, g=get_files)")
         save_as_csv(result, run)
 
+def timer_consumer():
+        result = time_kafka_consumer()
+        save_as_csv(result, "consumer_test")
 
 def time_kafka_producer(file_path, frequency, binning, color_channel, connect_kafka):
     result = []
@@ -244,6 +247,17 @@ def time_kafka_consumer():
         stop = time.clock()
         result.append(stop-start)
         fin2.save(str(message.offset) + ".tif")
+        if os.path.isfile("result.csv"):
+           with open("result.csv", "a") as f:
+              wr = csv.writer(f)
+              wr.writerow([stop-start])
+        else:
+           with open("result.csv", "a") as f:
+              wr = csv.writer(f)
+              wr.writerow([stop-start])
+
+
+    print("end of for loop")
     return result
 
 
