@@ -13,7 +13,7 @@ from kafka.common import LeaderNotAvailableError
 #     return [topic, producer]
 
 def connect(message):
-    kafka = KafkaClient("129.16.125.249:9092")
+    kafka = KafkaClient("130.239.81.54:9092")
     producer = SimpleProducer(kafka)
     topic = 'test'
 

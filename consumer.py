@@ -10,7 +10,7 @@ from kafka import KafkaConsumer
 
 def main():
     consumer = KafkaConsumer(group_id=b"my_group_id",
-                             bootstrap_servers=["129.16.125.231:9092"]) #,
+                             bootstrap_servers=["130.239.81.54:9092"]) #,
 
     consumer.subscribe(topics=['test'])
 
