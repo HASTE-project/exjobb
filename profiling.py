@@ -14,11 +14,11 @@ import numpy as np
 import time
 import cv2
 import csv
-#import kafka_producer
+import kafka_producer
 import sys
 #
-# from kafka import SimpleProducer, KafkaClient
-# from kafka.common import LeaderNotAvailableError
+from kafka import SimpleProducer, KafkaClient
+from kafka.common import LeaderNotAvailableError
 
 from skimage.measure import block_reduce
 from skimage import img_as_uint
@@ -191,7 +191,7 @@ def time_kafka_producer2(file_path, frequency, binning, color_channel, connect_k
 
 
 def timer_kafka_100bytes():
-    kafka = KafkaClient("129.16.125.249:9092")
+    kafka = KafkaClient("130.239.81.54:9092")
     producer = SimpleProducer(kafka)
     topic = 'test'
     result = []
