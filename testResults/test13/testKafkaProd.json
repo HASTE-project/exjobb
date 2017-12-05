@@ -1,0 +1,8 @@
+{"run0": {"file_path": "/mnt/volume2/testDatasets/0/", "binning": 1, "frequency": 0, "color_channel": ["1", "2", "3", "4", "5"], "connect_kafka": "yes"},
+"run1": {"file_path": "/mnt/volume2/testDatasets/1/", "binning": 1, "frequency": 0, "color_channel": ["1", "2", "3", "4", "5"], "connect_kafka": "yes"},
+"run2": {"file_path": "/mnt/volume2/testDatasets/2/", "binning": 1, "frequency": 0, "color_channel": ["1", "2", "3", "4", "5"], "connect_kafka": "yes"},
+"run3": {"file_path": "/mnt/volume2/testDatasets/3/", "binning": 1, "frequency": 0, "color_channel": ["1", "2", "3", "4", "5"], "connect_kafka": "yes"},
+"run4": {"file_path": "/mnt/volume2/testDatasets/4/", "binning": 1, "frequency": 0, "color_channel": ["1", "2", "3", "4", "5"], "connect_kafka": "yes"},
+"run5": {"file_path": "/mnt/volume2/testDatasets/5/", "binning": 1, "frequency": 0, "color_channel": ["1", "2", "3", "4", "5"], "connect_kafka": "yes"},
+"run6": {"file_path": "/mnt/volume2/testDatasets/6/", "binning": 1, "frequency": 0, "color_channel": ["1", "2", "3", "4", "5"], "connect_kafka": "yes"}}
+
