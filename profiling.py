@@ -199,9 +199,9 @@ def timer_kafka_100bytes():
     print(sys.getsizeof(message))
     for i in range(1000):
         try:
-            start = time.clock()
+            start = time.perf_counter()
             producer.send_messages(topic, message)
-            stop = time.clock()
+            stop = time.perf_counter()
             result.append(stop - start)
         except LeaderNotAvailableError:
             # https://github.com/mumrah/kafka-python/issues/249
