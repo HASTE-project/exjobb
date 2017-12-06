@@ -17,13 +17,13 @@ def main():
         for message in consumer:
             ty = type(message.value)
             print(ty)
-            print("message.key: {}".format(message.key))
-            img = cv2.imdecode(np.frombuffer(message.value, dtype=np.uint16), -1)
-            print("type img : {}".format(type(img)))
-            print("size img: {}".format(img.shape))
-            fin2 = Image.fromarray(img)
-            print("fin2 type: {}".format(type(fin2)))
-            fin2.save(str(message.offset) + ".tif")
+            print("message.key: {}".format(message.key.decode("utf-8")))
+      #      img = cv2.imdecode(np.frombuffer(message.value, dtype=np.uint16), -1)
+     #       print("type img : {}".format(type(img)))
+    #        print("size img: {}".format(img.shape))
+   #         fin2 = Image.fromarray(img)
+  #          print("fin2 type: {}".format(type(fin2)))
+ #           fin2.save(messafe.key.decode("utf-8") + ".tif")
 
     return Response(events())
 

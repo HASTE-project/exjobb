@@ -20,7 +20,7 @@ import numpy as np
 from PIL import Image
 from kafka import KafkaConsumer
 
-from kafka import SimpleProducer, KafkaClient
+from kafka import SimpleProducer, KafkaClient, KafkaProducer
 from kafka.common import LeaderNotAvailableError
 from skimage import img_as_uint
 from skimage.measure import block_reduce
@@ -137,7 +137,9 @@ def time_kafka_producer(file_path, period, binning, color_channel, connect_kafka
 
 def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafka):
     kafka = KafkaClient("130.239.81.54:9092")
-    producer = SimpleProducer(kafka)
+    #producer = SimpleProducer(kafka)
+    producer = KafkaProducer(bootstrap_servers=["130.239.81.54:9092"])
+#producer = KafkaProducer(bootstrap_servers=['broker1:1234'])
     topic = 'test'
     result = []
     files = os.listdir(file_path)
@@ -152,7 +154,7 @@ def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafk
                         as_bytes = jpeg.tobytes()
                         try:
                             start = time.clock()
-                            producer.send_messages(topic, as_bytes)
+                            producer.send(topic, key=str.encode(file), value=as_bytes)
                             stop = time.clock()
                             result.append(stop - start)
                         except LeaderNotAvailableError:
