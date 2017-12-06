@@ -24,10 +24,15 @@ def file_walk():
 @app.route("/fileWalk", methods=['POST'])
 def file_walk_post():
     file_path = request.form["file_path"]
+    print(file_path)
     period = request.form["period"]
+    print(period)
     binning = int(request.form["binning"])
+    print(binning)
     color_channel = request.form.getlist("color_channel")
+    print(color_channel)
     connect_kafka = request.form["kafka"]
+    print(connect_kafka)
     period = float(period)
    # simulatorNoFlask.get_files(file_path, period, binning, color_channel, connect_kafka)
     return "You are now streaming file names with Kafka"
