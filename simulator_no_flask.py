@@ -23,12 +23,6 @@ from skimage.measure import block_reduce
 import kafka_producer
 
 
-def print_response(response=None):
-    if response:
-        print('Error: {0}'.format(response[0].error))
-        print('Offset: {0}'.format(response[0].offset))
-
-
 def get_files(file_path, period, binning, color_channel, connect_kafka):
     """This function retrieves files and creates a stream of files to be used as a microscope simulator."""
     files = os.listdir(file_path)

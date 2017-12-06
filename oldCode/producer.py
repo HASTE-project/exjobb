@@ -46,9 +46,9 @@ def main(freq):
 
     kafka.close()
 
-    #add randomness in time in datageneration (maybe better with normal distribution??)
-    interval = random.uniform(freq-freq/5, freq-freq/5)
-    threading.Timer(interval,main,[freq]).start()
+    # add randomness in time in datageneration (maybe better with normal distribution??)
+    interval = random.uniform(freq - freq / 5, freq - freq / 5)
+    threading.Timer(interval, main, [freq]).start()
 
 
 @app.route("/fileWalk")
@@ -67,7 +67,8 @@ def get_files():
     producer = SimpleProducer(kafka)
     topic = 'test'
 
-    for root, dirs, files in os.walk('/mnt/volume/fromAl/Data_20151215 HepG2 LNP size exp live cell 24h_20151215_110422/AssayPlate_NUNC_#165305-1/'):
+    for root, dirs, files in os.walk(
+            '/mnt/volume/fromAl/Data_20151215 HepG2 LNP size exp live cell 24h_20151215_110422/AssayPlate_NUNC_#165305-1/'):
         if not files:
             print("files is empty")
         else:

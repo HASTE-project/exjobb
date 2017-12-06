@@ -1,4 +1,8 @@
-# Create new datasets for testing the simulator with images of different sizes
+"""This module creates test data sets which were used for profiling the simulator with images of different
+sizes.
+"""
+
+
 
 import os
 import cv2

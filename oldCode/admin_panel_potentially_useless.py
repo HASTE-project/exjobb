@@ -61,3 +61,71 @@ def save_results(results, run):
     fo.write(results)
     fo.write("\n")
     fo.close()
+
+
+# def get_files(file_path, period, binning, color_channel, connect_kafka):
+#     print('in get_files')
+#     for root, dirs, files in os.walk(file_path):
+#         print('in for')
+#         if not files:
+#             print('in if')
+#         #           pass
+#         else:
+#             if not dirs:
+#                 print('if not dirs')
+#             #		pass
+#             for i in range(len(files)):
+#                 #		print('2 for loop')
+#
+#                 simulatorNoFlask.get_file(files, color_channel, file_path, binning, connect_kafka)
+#
+#                 get_file(files, i, color_channel, file_path, binning, connect_kafka)
+#                 #                simulatorNoFlask.get_file(files, color_channel, file_path, binning, connect_kafka)
+#
+#                 time.sleep(period)
+#
+#
+# def get_file(files, i, color_channel, file_path, binning, connect_kafka):
+#     print('in get_file')
+#     if files[i][-5] in color_channel:
+#         print('in color_channel')
+#         img = cv2.imread(file_path + files[i], -1)
+#         binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
+#         if connect_kafka == "yes":
+#             print('in connect_kafka')
+#             ret, jpeg = cv2.imencode('.png', img_as_ubyte(binned_img))
+#             kafka_producer.connect(jpeg.tobytes())
+
+
+# def time_get_files(file_path, period, binning, color_channel, connect_kafka):
+#     result = []
+#     for root, dirs, files in os.walk(file_path):
+#         if not files:
+#             pass
+#         else:
+#             if not dirs:
+#                 pass
+#             if period == 0:
+#                 for i in range(len(files)):
+#                     start = time.clock()
+#                     if files[i][-5] in color_channel:
+#                         img = cv2.imread(file_path + files[i], -1)
+#                         binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
+#                         if connect_kafka == "yes":
+#                             ret, jpeg = cv2.imencode('.png', img_as_ubyte(binned_img))
+#                             kafka_producer.connect(jpeg.tobytes())
+#                     stop = time.clock()
+#                     result.append(stop - start)
+#             else:
+#                 for i in range(len(files)):
+#                     start = time.clock()
+#                     if files[i][-5] in color_channel:
+#                         img = cv2.imread(file_path + files[i], -1)
+#                         binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
+#                         if connect_kafka == "yes":
+#                             ret, jpeg = cv2.imencode('.png', img_as_ubyte(binned_img))
+#                             kafka_producer.connect(jpeg.tobytes())
+#                     time.sleep(period)
+#                     stop = time.clock()
+#                     result.append(stop - start)
+#             print(result)
