@@ -5,7 +5,7 @@ simulatorNoFlask.get_file(*args*)."""
 from flask import Flask, render_template, request
 
 # import kafka_producer
-import simulatorNoFlask
+#import simulatorNoFlask
 
 app = Flask(__name__)
 
@@ -24,12 +24,12 @@ def file_walk():
 @app.route("/fileWalk", methods=['POST'])
 def file_walk_post():
     file_path = request.form["file_path"]
-    frequency = request.form["period"]
+    period = request.form["period"]
     binning = int(request.form["binning"])
     color_channel = request.form.getlist("color_channel")
     connect_kafka = request.form["kafka"]
-    period = float(frequency)
-    simulatorNoFlask.get_files(file_path, period, binning, color_channel, connect_kafka)
+    period = float(period)
+   # simulatorNoFlask.get_files(file_path, period, binning, color_channel, connect_kafka)
     return "You are now streaming file names with Kafka"
 
 
