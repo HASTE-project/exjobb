@@ -23,7 +23,7 @@ def file_walk_post():
     connect_kafka = request.form["kafka"]
     period = float(period)
     simulator_no_flask.get_files(file_path, period, binning, color_channel, connect_kafka)
-    return "You are now streaming file names with Kafka"
+    return "You have now streamed all your files"
 
 
 if __name__ == "__main__":

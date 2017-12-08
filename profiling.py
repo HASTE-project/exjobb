@@ -136,7 +136,7 @@ def time_kafka_producer(file_path, period, binning, color_channel, connect_kafka
 
 
 def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafka):
-    kafka = KafkaClient("130.239.81.54:9092")
+ #   kafka = KafkaClient("130.239.81.54:9092")
     #producer = SimpleProducer(kafka)
     producer = KafkaProducer(bootstrap_servers=["130.239.81.54:9092"])
 #producer = KafkaProducer(bootstrap_servers=['broker1:1234'])
@@ -160,7 +160,8 @@ def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafk
                         except LeaderNotAvailableError:
                             # https://github.com/mumrah/kafka-python/issues/249
                             time.sleep(1)
-                            print_response(producer.send_messages(topic, as_bytes))
+                            producer.send(topic, key=str.encode(file), value=as_bytes)
+                            # print_response(producer.send_messages(topic, as_bytes))
     else:  # Stream with a given time period.
         for file in files:
             if os.path.isfile(file_path + file):
@@ -172,15 +173,17 @@ def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafk
                         as_bytes = jpeg.tobytes()
                         try:
                             start = time.clock()
-                            producer.send_messages(topic, as_bytes)
+#                            producer.send_messages(topic, as_bytes)
+                            producer.send(topic, key=str.encode(file), value=as_bytes)
                             time.sleep(period)
                             stop = time.clock()
                             result.append(stop - start)
                         except LeaderNotAvailableError:
                             # https://github.com/mumrah/kafka-python/issues/249
                             time.sleep(1)
-                            print_response(producer.send_messages(topic, as_bytes))
-        kafka.close()
+                            print_response(producer.send(topic, key=str.encode(file), value=as_bytes))
+                           # print_response(producer.send_messages(topic, as_bytes))
+     #   kafka.close()
     return result
 
 
