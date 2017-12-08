@@ -71,4 +71,3 @@ profiling.time_kafka_consumer() # time Kafka consumer
 profiling.timer_kafka_100bytes() # time Kafka producer when sending small messages 
 ```
 
-* etc
