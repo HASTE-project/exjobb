@@ -26,13 +26,25 @@ import kafka_producer
 def get_files(file_path, period, binning, color_channel, connect_kafka):
     """This function retrieves files and creates a stream of files to be used as a microscope simulator."""
     files = os.listdir(file_path)
+    print(files)
+    if connect_kafka == "yes":
+        # connect to Kafka server
+        res = kafka_producer.connect()
+        print(res)
+        topic = res[0]
+        producer = res[1]
+        print("hoho")
+    else:
+        producer = None
+        topic = None
+
     for file in files:
         if os.path.isfile(file_path + file):
-            get_file(file, color_channel, file_path, binning, connect_kafka)
+            get_file(file, color_channel, file_path, binning, connect_kafka, producer, topic)
         time.sleep(period)
 
 
-def get_file(file, color_channel, file_path, binning, connect_kafka):
+def get_file(file, color_channel, file_path, binning, connect_kafka, producer, topic):
     """
     This function takes one file, checks if it has the correct color channel, reads and converts the file and
     sends it to the streaming framework.
@@ -44,4 +56,6 @@ def get_file(file, color_channel, file_path, binning, connect_kafka):
             ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img)) # convert image file so it can be streamed
             print("size: {}".format(sys.getsizeof(jpeg.tobytes())))
             print(file)
-            kafka_producer.connect(jpeg.tobytes())
+            print(topic)
+            print("prod: {} topic: {}".format(producer, topic))
+            kafka_producer.send_kafka_message(producer, topic, jpeg.tobytes(), file)

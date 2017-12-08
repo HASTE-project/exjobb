@@ -19,8 +19,7 @@ import cv2
 import numpy as np
 from PIL import Image
 from kafka import KafkaConsumer
-
-from kafka import SimpleProducer, KafkaClient, KafkaProducer
+from kafka import KafkaProducer
 from kafka.common import LeaderNotAvailableError
 from skimage import img_as_uint
 from skimage.measure import block_reduce
@@ -115,7 +114,7 @@ def time_kafka_producer(file_path, period, binning, color_channel, connect_kafka
                         ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
                         as_bytes = jpeg.tobytes()
                         start = time.clock()
-                        kafka_producer.connect(as_bytes)
+                        kafka_producer.old_connect(as_bytes)
                         stop = time.clock()
                         result.append(stop - start)
     else:  # Stream with given time period.
@@ -128,7 +127,7 @@ def time_kafka_producer(file_path, period, binning, color_channel, connect_kafka
                         ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
                         as_bytes = jpeg.tobytes()
                         start = time.clock()
-                        kafka_producer.connect(as_bytes)
+                        kafka_producer.old_connect(as_bytes)
                         time.sleep(period)
                         stop = time.clock()
                         result.append(stop - start)
@@ -136,10 +135,10 @@ def time_kafka_producer(file_path, period, binning, color_channel, connect_kafka
 
 
 def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafka):
- #   kafka = KafkaClient("130.239.81.54:9092")
-    #producer = SimpleProducer(kafka)
+    #   kafka = KafkaClient("130.239.81.54:9092")
+    # producer = SimpleProducer(kafka)
     producer = KafkaProducer(bootstrap_servers=["130.239.81.54:9092"])
-#producer = KafkaProducer(bootstrap_servers=['broker1:1234'])
+    # producer = KafkaProducer(bootstrap_servers=['broker1:1234'])
     topic = 'test'
     result = []
     files = os.listdir(file_path)
@@ -173,7 +172,7 @@ def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafk
                         as_bytes = jpeg.tobytes()
                         try:
                             start = time.clock()
-#                            producer.send_messages(topic, as_bytes)
+                            #                            producer.send_messages(topic, as_bytes)
                             producer.send(topic, key=str.encode(file), value=as_bytes)
                             time.sleep(period)
                             stop = time.clock()
@@ -182,29 +181,32 @@ def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafk
                             # https://github.com/mumrah/kafka-python/issues/249
                             time.sleep(1)
                             print_response(producer.send(topic, key=str.encode(file), value=as_bytes))
-                           # print_response(producer.send_messages(topic, as_bytes))
-     #   kafka.close()
+                        # print_response(producer.send_messages(topic, as_bytes))
+    #   kafka.close()
     return result
 
 
 def timer_kafka_100bytes():
     """Function which tests how fast writing to a Kafka topic is when the message is 100 bytes."""
-    kafka = KafkaClient("130.239.81.54:9092")
-    producer = SimpleProducer(kafka)
+    # kafka = KafkaClient("130.239.81.54:9092")
+    #  producer = SimpleProducer(kafka)
+    producer = KafkaProducer(bootstrap_servers=["130.239.81.54:9092"])
     topic = 'test'
     result = []
     message = b"0" * 67  # overhead of 33 bytes
     for i in range(1000):
         try:
             start = time.perf_counter()
-            producer.send_messages(topic, message)
+            producer.send(topic, key=b'100bytes', value=message)
+            # producer.send_messages(topic, message)
             stop = time.perf_counter()
             result.append(stop - start)
         except LeaderNotAvailableError:
             # https://github.com/mumrah/kafka-python/issues/249
             time.sleep(1)
-            print_response(producer.send_messages(topic, message))
-    kafka.close()
+            producer.send(topic, key=b'100bytes', value=message)
+            # print_response(producer.send_messages(topic, message))
+    # kafka.close()
     save_as_csv(result, "100bytes")
 
 
