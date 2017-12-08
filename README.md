@@ -1,23 +1,3 @@
-
-
-
-
-
-1. Clone repo
-2. to use web interface (will appear on localhost 127.0.0.1:5000/fileWalk): python3 simulator
-3. to use the simulator without the interface:
-	import simulator_no_flask
-	simulator_no_flask.get_files(file_path, period, binning, color_channel, connect_kafka) # period = period time in seconds,  color_channel given as
-	list with up to 5 channels ie. ["1", "2", "5"], connect_kafka set to "yes" for Kafka server connection
-4. to profile with multiple runs at once: 
-	import profiling
-	profiling.timer_kafka("file_path_to_images.tif", "to_time") # to_time can be p: producer, p2: producer already connected to Kafka or g:simulator
-	profiling.time_kafka_consumer() # time Kafka consumer
-	profiling.timer_kafka_100bytes() # time Kafka producer when sending small messages 
-
-
-
-
 # Microscope simulator for the HASTE project 
 
 Master thesis work to simulate a microscope and stream the images coming from the microscope.
