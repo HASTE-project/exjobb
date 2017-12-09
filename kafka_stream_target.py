@@ -10,7 +10,13 @@ from kafka.common import LeaderNotAvailableError
 class StreamTarget:
 
     @abc.abstractmethod
-    def send_message(self, message, file_name):
+    def send_message(self, image_bytes, file_name, metadata):
+        """
+        :param image_bytes: bytearray for image.
+        :param file_name: original file name of image.
+        :param metadata: extra information (timestamp, spatial information, unique stream ID, etc.)
+        :return:
+        """
         raise NotImplementedError('users must define this method to use this base class')
 
 
@@ -37,7 +43,7 @@ class KafkaStreamTarget(StreamTarget):
 
         kafka.close()
 
-    def send_message(self, message, file_name):
+    def send_message(self, image_bytes, file_name, metadata):
         # kafka = KafkaClient("130.239.81.54:9092")
         # self.producer = SimpleProducer(kafka)
         # self.topic = 'test'
@@ -47,14 +53,14 @@ class KafkaStreamTarget(StreamTarget):
         print("prod: {} topic: {}".format(self.producer, self.topic))
 
         try:
-            self.producer.send(self.topic, key=str.encode(file_name), value=message)
+            self.producer.send(self.topic, key=str.encode(file_name), value=image_bytes)
             #  self.producer.send(self.topic, key=file_name, value=message)
             print("msg sent!")
         except LeaderNotAvailableError:
             print("in except :(")
             # https://github.com/mumrah/kafka-python/issues/249
             time.sleep(1)
-            KafkaStreamTarget.print_response(self.producer.send(self.topic, key=file_name, value=message))
+            KafkaStreamTarget.print_response(self.producer.send(self.topic, key=file_name, value=image_bytes))
 
         #  kafka.close()
 
