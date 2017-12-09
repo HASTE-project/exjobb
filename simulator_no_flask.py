@@ -20,7 +20,7 @@ import numpy as np
 from skimage import img_as_uint
 from skimage.measure import block_reduce
 
-import kafka_producer
+import kafka_stream_target
 
 
 def get_files(file_path, period, binning, color_channel, connect_kafka):
@@ -29,7 +29,7 @@ def get_files(file_path, period, binning, color_channel, connect_kafka):
     print(files)
     if connect_kafka == "yes":
         # connect to Kafka server
-        res = kafka_producer.connect()
+        res = kafka_stream_target.connect()
         print(res)
         topic = res[0]
         producer = res[1]
@@ -58,4 +58,4 @@ def get_file(file, color_channel, file_path, binning, connect_kafka, producer, t
             print(file)
             print(topic)
             print("prod: {} topic: {}".format(producer, topic))
-            kafka_producer.send_kafka_message(producer, topic, jpeg.tobytes(), file)
+            kafka_stream_target.send_kafka_message(producer, topic, jpeg.tobytes(), file)
