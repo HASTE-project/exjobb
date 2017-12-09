@@ -1,12 +1,20 @@
 """Module to connect to Kafka server and send messages to Kafka producer."""
 
 import time
+import abc
 
 from kafka import KafkaProducer, KafkaClient, SimpleProducer
 from kafka.common import LeaderNotAvailableError
 
 
-class KafkaStreamTarget:
+class StreamTarget:
+
+    @abc.abstractmethod
+    def send_message(self, message, file_name):
+        raise NotImplementedError('users must define this method to use this base class')
+
+
+class KafkaStreamTarget(StreamTarget):
 
     def __init__(self):
         # kafka = KafkaClient("129.16.125.231:9092")
@@ -29,7 +37,7 @@ class KafkaStreamTarget:
 
         kafka.close()
 
-    def send_kafka_message(self, message, file_name):
+    def send_message(self, message, file_name):
         # kafka = KafkaClient("130.239.81.54:9092")
         # self.producer = SimpleProducer(kafka)
         # self.topic = 'test'
