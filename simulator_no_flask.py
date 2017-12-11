@@ -44,7 +44,7 @@ def get_files(file_path, period, binning, color_channel, send_to_target):
     if send_to_target == "yes":
         # connect to stream target:
         # stream_target = KafkaStreamTarget() # TODO - pick one here. (or pass it in).
-        stream_target = HarmonicIOStreamTarget('1.2.3.4?', '42?')  # TODO???
+        stream_target = HarmonicIOStreamTarget('130.239.81.126', '8080')
         print(stream_target)
         # topic = stream_target[0]
         # producer = stream_target[1]
