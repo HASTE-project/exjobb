@@ -24,6 +24,7 @@ class KafkaStreamTarget(StreamTarget):
 
     def __init__(self):
         # kafka = KafkaClient("129.16.125.231:9092")
+        # Review: this address should be passed in the ctor
         self.producer = KafkaProducer(bootstrap_servers=["130.239.81.54:9092"])
         self.topic = 'test'
         print(type(self.producer))
@@ -44,6 +45,12 @@ class KafkaStreamTarget(StreamTarget):
         kafka.close()
 
     def send_message(self, image_bytes, file_name, metadata):
+        """
+        :param image_bytes: bytearray for image.
+        :param file_name: original file name of image.
+        :param metadata: extra information (timestamp, spatial information, unique stream ID, etc.)
+        :return:
+        """
         # kafka = KafkaClient("130.239.81.54:9092")
         # self.producer = SimpleProducer(kafka)
         # self.topic = 'test'
@@ -60,6 +67,7 @@ class KafkaStreamTarget(StreamTarget):
             print("in except :(")
             # https://github.com/mumrah/kafka-python/issues/249
             time.sleep(1)
+            # ReviewL don't copy paste here - use a loop instead for max retries
             KafkaStreamTarget.print_response(self.producer.send(self.topic, key=file_name, value=image_bytes))
 
         #  kafka.close()

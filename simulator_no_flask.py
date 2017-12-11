@@ -26,6 +26,7 @@ from hio_stream_target import HarmonicIOStreamTarget
 
 
 def get_files(file_path, period, binning, color_channel, send_to_target):
+    # Review: add docs for arguments here
     """This function retrieves files and creates a stream of files to be used as a microscope simulator."""
     files = os.listdir(file_path)
     print(files)
@@ -55,7 +56,7 @@ def get_file(file, color_channel, file_path, binning, stream_id, stream_target=N
     """
     This function takes one file, checks if it has the correct color channel, reads and converts the file and
     sends it to the streaming framework.
-     """
+    """
     if file[-5] in color_channel:
         img = cv2.imread(file_path + file, -1)
         binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
