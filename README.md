@@ -10,6 +10,8 @@ The simulator can either be run on its own or connected with Kafka. To run it wi
 
 cv2, numpy, PIL, flask, kafka-python, skimage 
 
+To stream to Harmonic IO, the stream connector is needed: https://github.com/beirbear/HarmonicSC/
+
 
 ### Installing
 

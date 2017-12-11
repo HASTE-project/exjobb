@@ -24,7 +24,7 @@ from kafka.common import LeaderNotAvailableError
 from skimage import img_as_uint
 from skimage.measure import block_reduce
 
-import kafka_producer
+import kafka_stream_target
 
 
 def timer_kafka(file_path, to_time):
@@ -80,7 +80,7 @@ def time_get_files(file_path, period, binning, color_channel, connect_kafka):
                     binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
                     if connect_kafka == "yes":
                         ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
-                        kafka_producer.connect(jpeg.tobytes())
+                        kafka_stream_target.connect(jpeg.tobytes())
             stop = time.clock()
             result.append(stop - start)
     else:
@@ -93,7 +93,7 @@ def time_get_files(file_path, period, binning, color_channel, connect_kafka):
                     binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
                     if connect_kafka == "yes":
                         ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
-                        kafka_producer.connect(jpeg.tobytes())
+                        kafka_stream_target.connect(jpeg.tobytes())
             time.sleep(period)
             stop = time.perf_counter()
             result.append(stop - start)
@@ -114,7 +114,7 @@ def time_kafka_producer(file_path, period, binning, color_channel, connect_kafka
                         ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
                         as_bytes = jpeg.tobytes()
                         start = time.clock()
-                        kafka_producer.old_connect(as_bytes)
+                        kafka_stream_target.old_connect(as_bytes)
                         stop = time.clock()
                         result.append(stop - start)
     else:  # Stream with given time period.
@@ -127,7 +127,7 @@ def time_kafka_producer(file_path, period, binning, color_channel, connect_kafka
                         ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
                         as_bytes = jpeg.tobytes()
                         start = time.clock()
-                        kafka_producer.old_connect(as_bytes)
+                        kafka_stream_target.old_connect(as_bytes)
                         time.sleep(period)
                         stop = time.clock()
                         result.append(stop - start)
