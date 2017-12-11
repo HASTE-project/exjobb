@@ -11,6 +11,7 @@ giving a list, for example ['1','3'] sets color_channels 1 and 3.
 connect_kafka: set to "yes" is Kafka is used as a streaming framework.
 """
 
+import datetime
 import os
 import sys
 import time
@@ -19,15 +20,21 @@ import cv2
 import numpy as np
 from skimage import img_as_uint
 from skimage.measure import block_reduce
-import datetime
 
-from kafka_stream_target import KafkaStreamTarget
 from hio_stream_target import HarmonicIOStreamTarget
 
 
 def get_files(file_path, period, binning, color_channel, send_to_target):
-    # Review: add docs for arguments here
-    """This function retrieves files and creates a stream of files to be used as a microscope simulator."""
+    """
+    This function retrieves files and creates a stream of files to be used as a microscope simulator.
+    :param file_path: file path to location of image test data set
+    :param period: The time period between every image (setting to 0 gives minimal time period)
+    :param binning: specify the binning (reduce the number of pixels to compress the image), this is given as an
+    int
+    :param color_channel: specify color channels, the channels are given as a list eg. ['1', '2'] (the Yokogawa
+    microscope can have up to five color channels)
+    :param send_to_target: specify if the simulator shall stream images somewhere else with streaming framework
+    """
     files = os.listdir(file_path)
     print(files)
     stream_target = None
@@ -37,14 +44,15 @@ def get_files(file_path, period, binning, color_channel, send_to_target):
     if send_to_target == "yes":
         # connect to stream target:
         # stream_target = KafkaStreamTarget() # TODO - pick one here. (or pass it in).
-        stream_target = HarmonicIOStreamTarget('1.2.3.4?', '42?') # TODO???
+        stream_target = HarmonicIOStreamTarget('1.2.3.4?', '42?')  # TODO???
         print(stream_target)
-        #topic = stream_target[0]
-        #producer = stream_target[1]
+        # topic = stream_target[0]
+        # producer = stream_target[1]
         print("hoho")
     else:
-        #producer = None
-        #topic = None
+        pass
+    # producer = None
+    # topic = None
 
     for file in files:
         if os.path.isfile(file_path + file):
@@ -61,11 +69,11 @@ def get_file(file, color_channel, file_path, binning, stream_id, stream_target=N
         img = cv2.imread(file_path + file, -1)
         binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
         if stream_target is not None:
-            ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img)) # convert image file so it can be streamed
+            ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))  # convert image file so it can be streamed
             print("size: {}".format(sys.getsizeof(jpeg.tobytes())))
             print(file)
-            #print(topic)
-            #print("prod: {} topic: {}".format(producer, topic))
+            # print(topic)
+            # print("prod: {} topic: {}".format(producer, topic))
             metadata = {
                 'stream_id': stream_id,
                 'timestamp': time.time(),
