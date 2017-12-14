@@ -18,3 +18,5 @@ file_information.txt
 
 #*.tif
 
+build
+*.egg-info
