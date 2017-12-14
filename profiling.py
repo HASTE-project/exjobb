@@ -25,6 +25,7 @@ from skimage import img_as_uint
 from skimage.measure import block_reduce
 
 import kafka_stream_target
+import threading
 
 
 def timer_kafka(file_path, to_time):
@@ -249,3 +250,62 @@ def save_as_csv(results, run):
     with open(run + "result.csv", "w") as f:
         wr = csv.writer(f)
         wr.writerow(results)
+
+
+msg_size = 100
+msg_payload = ('kafkatest' * 20).encode()[:msg_size]
+msg_count = 50
+
+
+def python_kafka_producer_performance():
+    producer = KafkaProducer(bootstrap_servers=["130.239.81.54:9092"])
+
+    producer_start = time.time()
+    topic = 'testing3'
+    for i in range(msg_count):
+        producer.send(topic, msg_payload)
+
+    producer.flush()  # clear all local buffers and produce pending messages
+
+    return time.time() - producer_start
+
+
+def python_kafka_consumer_performance():
+    topic = 'testing3'
+
+    consumer = KafkaConsumer(
+        bootstrap_servers=["130.239.81.54:9092"],
+        auto_offset_reset='earliest',  # start at earliest topic
+        group_id=None  # do no offest commit
+    )
+
+    consumer1 = KafkaConsumer(group_id='my-group',
+                              auto_offset_reset='earliest',
+                              bootstrap_servers=["130.239.81.54:9092"])
+    consumer2 = KafkaConsumer(group_id='my-group',
+                              auto_offset_reset='earliest',
+                              bootstrap_servers=["130.239.81.54:9092"])
+
+    msg_consumed_count = 0
+
+    consumer_start = time.time()
+    consumer1.subscribe([topic])
+    consumer2.subscribe([topic])
+    for msg in consumer1:
+        print("consumer1, msg nb: {}".format(msg_consumed_count))
+        msg_consumed_count += 1
+
+        if msg_consumed_count >= msg_count:
+            break
+
+    consumer_timing = time.time() - consumer_start
+    consumer1.close()
+
+
+
+
+
+
+
+    # for msg in consumer2
+    return consumer_timing

@@ -22,7 +22,7 @@ def file_walk_post():
     color_channel = request.form.getlist("color_channel")
     connect_kafka = request.form["kafka"] # Review: better to parse to a boolean here,
     #  rather than checking against a string in the other places
-    # Review2: better to spec which streaming fw to use? 
+    # Review2: better to spec which streaming fw to use?
     period = float(period)
     simulator_no_flask.get_files(file_path, period, binning, color_channel, connect_kafka)
     return "You have now streamed all your files"
