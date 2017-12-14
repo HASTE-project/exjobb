@@ -37,7 +37,7 @@ thread1.start()
 msg_count = 50
 
 def python_kafka_consumer_performance(consumer):
-    topic = 'testing3'
+    topic = 'test5part'
 
     # consumer = KafkaConsumer(
     #     bootstrap_servers=["130.239.81.54:9092"],
