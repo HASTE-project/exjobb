@@ -28,10 +28,10 @@ def print_time(delay, counter):
 
 # Create new threads
 thread1 = myThread(1, "Thread-1", 4, "consumer1")
-thread2 = myThread(2, "Thread-2", 4, "consumer2")
+#thread2 = myThread(2, "Thread-2", 4, "consumer2")
 
 thread1.start()
-thread2.start()
+#thread2.start()
 
 
 msg_count = 50
