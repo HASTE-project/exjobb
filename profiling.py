@@ -261,7 +261,7 @@ def python_kafka_producer_performance():
     producer = KafkaProducer(bootstrap_servers=["130.239.81.54:9092"])
 
     producer_start = time.time()
-    topic = 'testing3'
+    topic = 'test5part'
     for i in range(msg_count):
         producer.send(topic, msg_payload)
 
@@ -271,7 +271,7 @@ def python_kafka_producer_performance():
 
 
 def python_kafka_consumer_performance():
-    topic = 'testing3'
+    topic = 'test5part'
 
     consumer = KafkaConsumer(
         bootstrap_servers=["130.239.81.54:9092"],
