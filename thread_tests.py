@@ -33,8 +33,11 @@ thread1 = myThread(1, "Thread-1", 4, "consumer1")
 thread1.start()
 #thread2.start()
 
+# thread1.join()
+# thread2.join()
 
 msg_count = 50
+
 
 def python_kafka_consumer_performance(consumer):
     topic = 'test5part'
@@ -54,14 +57,15 @@ def python_kafka_consumer_performance(consumer):
 
     msg_consumed_count = 0
 
-    consumer_start = time.time()
+
     consumer1.subscribe([topic])
+    consumer_start = time.time()
     # consumer2.subscribe([topic])
     for msg in consumer1:
         print("{}, msg nb: {}".format(consumer, msg_consumed_count))
         msg_consumed_count += 1
 
-        if msg_consumed_count >= msg_count:
+        if msg_consumed_count >= msg_count/5:
             break
 
     consumer_timing = time.time() - consumer_start
