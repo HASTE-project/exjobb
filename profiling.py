@@ -140,7 +140,7 @@ def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafk
     # producer = SimpleProducer(kafka)
     producer = KafkaProducer(bootstrap_servers=["130.239.81.54:9092"])
     # producer = KafkaProducer(bootstrap_servers=['broker1:1234'])
-    topic = 'test'
+    topic = 'test5part'
     result = []
     files = os.listdir(file_path)
     if period == 0:  # Stream as fast as possible.

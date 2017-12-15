@@ -10,13 +10,13 @@ def main():
     consumer = KafkaConsumer(group_id=b"my_group_id",
                              bootstrap_servers=["130.239.81.54:9092"])
 
-    consumer.subscribe(topics=['test'])
+    consumer.subscribe(topics=['test5part'])
 
     def events():
         print("in events")
         for message in consumer:
             # ty = type(message.value)
-            # print(ty)
+            print(message.offset)
             # print("message.key: {}".format(message.key.decode("utf-8")))
             img = cv2.imdecode(np.frombuffer(message.value, dtype=np.uint16), -1)
             # print("type img : {}".format(type(img)))
