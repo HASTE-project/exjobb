@@ -4,11 +4,12 @@ import numpy as np
 from PIL import Image
 from flask import Response
 from kafka import KafkaConsumer
+from myvariables import kafka_server
 
 
 def main():
     consumer = KafkaConsumer(group_id=b"my_group_id",
-                             bootstrap_servers=["130.239.81.54:9092"])
+                             bootstrap_servers=[kafka_server + ":9092"])
 
     consumer.subscribe(topics=['test5part'])
 

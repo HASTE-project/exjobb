@@ -26,6 +26,7 @@ from skimage.measure import block_reduce
 
 import kafka_stream_target
 import threading
+from myvariables import kafka_server
 
 
 def timer_kafka(file_path, to_time):
@@ -138,7 +139,7 @@ def time_kafka_producer(file_path, period, binning, color_channel, connect_kafka
 def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafka):
     #   kafka = KafkaClient("130.239.81.54:9092")
     # producer = SimpleProducer(kafka)
-    producer = KafkaProducer(bootstrap_servers=["130.239.81.54:9092"])
+    producer = KafkaProducer(bootstrap_servers=[kafka_server + ":9092"])
     # producer = KafkaProducer(bootstrap_servers=['broker1:1234'])
     topic = 'test5part'
     result = []
@@ -191,7 +192,7 @@ def timer_kafka_100bytes():
     """Function which tests how fast writing to a Kafka topic is when the message is 100 bytes."""
     # kafka = KafkaClient("130.239.81.54:9092")
     #  producer = SimpleProducer(kafka)
-    producer = KafkaProducer(bootstrap_servers=["130.239.81.54:9092"])
+    producer = KafkaProducer(bootstrap_servers=[kafka_server + ":9092"])
     topic = 'test'
     result = []
     message = b"0" * 67  # overhead of 33 bytes
@@ -217,7 +218,7 @@ def time_kafka_consumer():
     result = []
 
     consumer = KafkaConsumer(group_id=b"my_group_id",
-                             bootstrap_servers=["130.239.81.54:9092"])
+                             bootstrap_servers=[kafka_server + ":9092"])
 
     consumer.subscribe(topics=['test'])
 
@@ -257,16 +258,20 @@ msg_payload = ('kafkatest' * 20).encode()[:msg_size]
 msg_count = 50
 
 
+
 def python_kafka_producer_performance():
-    producer = KafkaProducer(bootstrap_servers=["130.239.81.54:9092"])
+    file = open("producer_time.txt", "a")
+    producer = KafkaProducer(bootstrap_servers=[kafka_server + ":9092"])
 
     producer_start = time.time()
     topic = 'test5part'
+    file.write("\n{}".format(time.perf_counter()))
     for i in range(msg_count):
         producer.send(topic, msg_payload)
-
+    file.write("\n{}".format(time.perf_counter()))
     producer.flush()  # clear all local buffers and produce pending messages
 
+    file.close()
     return time.time() - producer_start
 
 
@@ -274,17 +279,17 @@ def python_kafka_consumer_performance():
     topic = 'test5part'
 
     consumer = KafkaConsumer(
-        bootstrap_servers=["130.239.81.54:9092"],
+        bootstrap_servers=[kafka_server + ":9092"],
         auto_offset_reset='earliest',  # start at earliest topic
         group_id=None  # do no offest commit
     )
 
     consumer1 = KafkaConsumer(group_id='my-group',
                               auto_offset_reset='earliest',
-                              bootstrap_servers=["130.239.81.54:9092"])
+                              bootstrap_servers=[kafka_server + ":9092"])
     consumer2 = KafkaConsumer(group_id='my-group',
                               auto_offset_reset='earliest',
-                              bootstrap_servers=["130.239.81.54:9092"])
+                              bootstrap_servers=[kafka_server + ":9092"])
 
     msg_consumed_count = 0
 
