@@ -75,7 +75,7 @@ def time_get_files(file_path, period, binning, color_channel, connect_kafka):
 
     if period == 0:
         for file in files:
-            start = time.clock()
+            start = time.time()
             if os.path.isfile(file_path + file):
                 if file[-5] in color_channel:  # 5th letter from the end of file name gives the color channel
                     img = cv2.imread(file_path + file, -1)
@@ -83,12 +83,12 @@ def time_get_files(file_path, period, binning, color_channel, connect_kafka):
                     if connect_kafka == "yes":
                         ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
                         kafka_stream_target.connect(jpeg.tobytes())
-            stop = time.clock()
+            stop = time.time()
             result.append(stop - start)
     else:
         print("period!=0")
         for file in files:
-            start = time.perf_counter()
+            start = time.time()
             if os.path.isfile(file_path + file):
                 if file[-5] in color_channel:  # 5th letter from the end of file name gives the color channel
                     img = cv2.imread(file_path + file, -1)
@@ -97,7 +97,7 @@ def time_get_files(file_path, period, binning, color_channel, connect_kafka):
                         ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
                         kafka_stream_target.connect(jpeg.tobytes())
             time.sleep(period)
-            stop = time.perf_counter()
+            stop = time.time()
             result.append(stop - start)
     return result
 
@@ -128,10 +128,10 @@ def time_kafka_producer(file_path, period, binning, color_channel, connect_kafka
                     if connect_kafka == "yes":
                         ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
                         as_bytes = jpeg.tobytes()
-                        start = time.clock()
+                        start = time.time()
                         kafka_stream_target.old_connect(as_bytes)
                         time.sleep(period)
-                        stop = time.clock()
+                        stop = time.time()
                         result.append(stop - start)
     return result
 
@@ -154,9 +154,9 @@ def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafk
                         ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
                         as_bytes = jpeg.tobytes()
                         try:
-                            start = time.clock()
+                            start = time.time()
                             producer.send(topic, key=str.encode(file), value=as_bytes)
-                            stop = time.clock()
+                            stop = time.time()
                             result.append(stop - start)
                         except LeaderNotAvailableError:
                             # https://github.com/mumrah/kafka-python/issues/249
@@ -173,11 +173,11 @@ def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafk
                         ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
                         as_bytes = jpeg.tobytes()
                         try:
-                            start = time.clock()
+                            start = time.time()
                             #                            producer.send_messages(topic, as_bytes)
                             producer.send(topic, key=str.encode(file), value=as_bytes)
                             time.sleep(period)
-                            stop = time.clock()
+                            stop = time.time()
                             result.append(stop - start)
                         except LeaderNotAvailableError:
                             # https://github.com/mumrah/kafka-python/issues/249
@@ -198,10 +198,10 @@ def timer_kafka_100bytes():
     message = b"0" * 67  # overhead of 33 bytes
     for i in range(1000):
         try:
-            start = time.perf_counter()
+            start = time.time()
             producer.send(topic, key=b'100bytes', value=message)
             # producer.send_messages(topic, message)
-            stop = time.perf_counter()
+            stop = time.time()
             result.append(stop - start)
         except LeaderNotAvailableError:
             # https://github.com/mumrah/kafka-python/issues/249
@@ -223,10 +223,10 @@ def time_kafka_consumer():
     consumer.subscribe(topics=['test'])
 
     for message in consumer:
-        start = time.clock()
+        start = time.time()
         img = cv2.imdecode(np.frombuffer(message.value, dtype=np.uint16), -1)
         fin2 = Image.fromarray(img)
-        stop = time.clock()
+        stop = time.time()
         result.append(stop - start)
         fin2.save(str(message.offset) + ".tif")
         if os.path.isfile("consumer_test_result.csv"):
@@ -265,10 +265,10 @@ def python_kafka_producer_performance():
 
     producer_start = time.time()
     topic = 'test5part'
-    file.write("\n{}".format(time.perf_counter()))
+    file.write("\n{}".format(time.time()))
     for i in range(msg_count):
         producer.send(topic, msg_payload)
-    file.write("\n{}".format(time.perf_counter()))
+    file.write("\n{}".format(time.time()))
     producer.flush()  # clear all local buffers and produce pending messages
 
     file.close()
