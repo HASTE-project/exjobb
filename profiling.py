@@ -163,6 +163,7 @@ def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafk
                            # result.append(stop - start)
                         except LeaderNotAvailableError:
                             # https://github.com/mumrah/kafka-python/issues/249
+                            print("in except")
                             time.sleep(1)
                             producer.send(topic, key=str.encode(file), value=as_bytes)
                             # print_response(producer.send_messages(topic, as_bytes))
