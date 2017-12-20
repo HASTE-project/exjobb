@@ -25,7 +25,6 @@ from skimage import img_as_uint
 from skimage.measure import block_reduce
 
 import kafka_stream_target
-import threading
 from myvariables import kafka_server
 
 
@@ -258,7 +257,6 @@ msg_payload = ('kafkatest' * 20).encode()[:msg_size]
 msg_count = 50
 
 
-
 def python_kafka_producer_performance():
     file = open("producer_time.txt", "a")
     producer = KafkaProducer(bootstrap_servers=[kafka_server + ":9092"])
@@ -305,12 +303,6 @@ def python_kafka_consumer_performance():
 
     consumer_timing = time.time() - consumer_start
     consumer1.close()
-
-
-
-
-
-
 
     # for msg in consumer2
     return consumer_timing
