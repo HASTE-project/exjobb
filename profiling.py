@@ -157,6 +157,7 @@ def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafk
                         as_bytes = jpeg.tobytes()
                         try:
                          #   start = time.time()
+                            print("in try")
                             producer.send(topic, key=str.encode(file), value=as_bytes)
                           #  stop = time.time()
                            # result.append(stop - start)
