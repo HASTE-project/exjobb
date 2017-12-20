@@ -31,8 +31,8 @@ def python_kafka_consumer_performance(consumer_number):
        # print("{}, msg nb: {}".format(consumer_number, msg_consumed_count))
         msg_consumed_count += 1
         file.write("\n{}".format(time.time()))
-        # img = cv2.imdecode(np.frombuffer(message.value, dtype=np.uint16), -1)
-        # fin2 = Image.fromarray(img)
+      #  img = cv2.imdecode(np.frombuffer(message.value, dtype=np.uint16), -1)
+     #   fin2 = Image.fromarray(img)
         # if msg_consumed_count >= msg_count:
         #     break
 
