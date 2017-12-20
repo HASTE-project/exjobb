@@ -28,7 +28,7 @@ def start_processes(num_of_proc):
 if __name__ == "__main__":
 
     ta = time.time()
-    start_processes(2)
+    start_processes(1)
     print("own impl time: {}".format(time.time()-ta))
 
 
