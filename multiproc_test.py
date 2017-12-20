@@ -11,8 +11,8 @@ def start_processes(num_of_proc):
 
     file = open("consumer_res.txt", "a")
     all_processes = []
-    t = time.clock()
-    file.write("\n{}".format(time.perf_counter()))
+    t = time.time()
+    file.write("\n{}".format(time.time()))
     for i in range(num_of_proc):
        # print(i)
         all_processes.append(multiprocessing.Process(target=pkcp.python_kafka_consumer_performance, args=str(i)))
@@ -27,7 +27,7 @@ def start_processes(num_of_proc):
 
 if __name__ == "__main__":
 
-    ta = time.clock()
+    ta = time.time()
     start_processes(2)
-    print("own impl time: {}".format(time.clock()-ta))
+    print("own impl time: {}".format(time.time()-ta))
 
