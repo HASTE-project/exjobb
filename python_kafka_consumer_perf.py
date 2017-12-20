@@ -15,7 +15,7 @@ def python_kafka_consumer_performance(consumer_number):
     topic = 'test5part'
     msg_count = 0
     print("in multip!")
-    file.write("\n{}".format(time.perf_counter()))
+    file.write("\n{}".format(time.time()))
     #file.write(str(time.perf_counter()))
     consumer = KafkaConsumer(group_id='my-group',
                              auto_offset_reset='earliest',
@@ -25,7 +25,7 @@ def python_kafka_consumer_performance(consumer_number):
     msg_consumed_count = 0
     print("msg_count: {}".format(msg_count))
     consumer.subscribe([topic])
-    consumer_start = time.perf_counter()
+    consumer_start = time.time()
 
     for message in consumer:
        # print("{}, msg nb: {}".format(consumer_number, msg_consumed_count))
