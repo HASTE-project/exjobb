@@ -143,25 +143,32 @@ def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafk
     topic = 'test5part'
     result = []
     files = os.listdir(file_path)
+    time_file = open("producer_timer.txt", "a")
     if period == 0:  # Stream as fast as possible.
+        time_file.write("\n start time{}".format(time.time()))    
         for file in files:
             if os.path.isfile(file_path + file):
-                if file[-5] in color_channel:  # 5th letter from the end of file name gives the color channel
+                if 1==1: #file[-5] in color_channel:  # 5th letter from the end of file name gives the color channel
                     img = cv2.imread(file_path + file, -1)
                     binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
                     if connect_kafka == "yes":
+                        print("hohoho")
                         ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
                         as_bytes = jpeg.tobytes()
                         try:
-                            start = time.time()
+                         #   start = time.time()
+                            print("in try")
                             producer.send(topic, key=str.encode(file), value=as_bytes)
-                            stop = time.time()
-                            result.append(stop - start)
+                          #  stop = time.time()
+                           # result.append(stop - start)
                         except LeaderNotAvailableError:
                             # https://github.com/mumrah/kafka-python/issues/249
+                            print("in except")
                             time.sleep(1)
                             producer.send(topic, key=str.encode(file), value=as_bytes)
                             # print_response(producer.send_messages(topic, as_bytes))
+        time_file.write("\n stop time{}".format(time.time()))
+        time_file.close()
     else:  # Stream with a given time period.
         for file in files:
             if os.path.isfile(file_path + file):
