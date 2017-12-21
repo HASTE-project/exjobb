@@ -267,7 +267,7 @@ msg_count = 5000
 
 
 def python_kafka_producer_performance():
-    msg_size = 250
+    msg_size = 25
     msg_payload = b'0'*msg_size #('kafkatest' * 20).encode()[:msg_size]
     msg_count = 50
 
