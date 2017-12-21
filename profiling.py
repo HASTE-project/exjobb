@@ -28,6 +28,7 @@ from skimage.measure import block_reduce
 import kafka_stream_target
 from myvariables import kafka_server
 
+from myvariables import topic
 
 def timer_kafka(file_path, to_time):
     """
@@ -141,7 +142,7 @@ def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafk
     # producer = SimpleProducer(kafka)
     producer = KafkaProducer(bootstrap_servers=[kafka_server + ":9092"])
     # producer = KafkaProducer(bootstrap_servers=['broker1:1234'])
-    topic = 'test5part'
+   # topic = 'test5part'
     result = []
     files = os.listdir(file_path)
     time_file = open("producer_timer.txt", "a")
@@ -200,7 +201,7 @@ def timer_kafka_100bytes():
     # kafka = KafkaClient("130.239.81.54:9092")
     #  producer = SimpleProducer(kafka)
     producer = KafkaProducer(bootstrap_servers=[kafka_server + ":9092"])
-    topic = 'test'
+   # topic = 'test'
     result = []
     message = b"0" * 67  # overhead of 33 bytes
     for i in range(1000):
@@ -227,7 +228,7 @@ def time_kafka_consumer():
     consumer = KafkaConsumer(group_id=b"my_group_id",
                              bootstrap_servers=[kafka_server + ":9092"])
 
-    consumer.subscribe(topics=['test'])
+    consumer.subscribe(topics=topic)
 
     for message in consumer:
         start = time.time()
@@ -266,16 +267,16 @@ msg_count = 5000
 
 
 def python_kafka_producer_performance():
-    msg_size = 2500000
+    msg_size = 250
     msg_payload = b'0'*msg_size #('kafkatest' * 20).encode()[:msg_size]
-    msg_count = 5000
+    msg_count = 50
 
     print("size of msg: {}".format(sys.getsizeof(msg_payload)))
     file = open("producer_time.txt", "a")
     producer = KafkaProducer(bootstrap_servers=[kafka_server + ":9092"])
 
     producer_start = time.time()
-    topic = 'test5part'
+    # topic = 'test5part'
     file.write("\n{}".format(time.time()))
     for i in range(msg_count):
         producer.send(topic, msg_payload)
@@ -287,7 +288,7 @@ def python_kafka_producer_performance():
 
 
 def python_kafka_consumer_performance():
-    topic = 'test5part'
+  #  topic = 'test5part'
 
     consumer = KafkaConsumer(
         bootstrap_servers=[kafka_server + ":9092"],

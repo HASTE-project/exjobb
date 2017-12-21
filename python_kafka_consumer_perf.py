@@ -5,14 +5,14 @@ from PIL import Image
 
 from kafka import KafkaConsumer
 import sys
-from myvariables import kafka_server
+from myvariables import kafka_server, topic
 
 # file1 = open("consumer1_res.txt", "a")
 # file2
 
 def python_kafka_consumer_performance(consumer_number):
     file = open("consmer_res" + str(consumer_number) + ".txt", "a")
-    topic = 'test'
+  #  topic = TOPIC
     msg_count = 0
     print("in multip!")
     file.write("\n{}".format(time.time()))

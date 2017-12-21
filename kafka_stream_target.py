@@ -6,7 +6,7 @@ import abc
 from kafka import KafkaProducer, KafkaClient, SimpleProducer
 from kafka.common import LeaderNotAvailableError
 
-from myvariables import kafka_server
+from myvariables import kafka_server, topic
 class StreamTarget:
 
     @abc.abstractmethod
@@ -26,14 +26,14 @@ class KafkaStreamTarget(StreamTarget):
         # kafka = KafkaClient("129.16.125.231:9092")
         # Review: this address should be passed in the ctor
         self.producer = KafkaProducer(bootstrap_servers=[kafka_server + ":9092"])
-        self.topic = 'test'
+        self.topic = topic
         print(type(self.producer))
         # return [topic, producer]
 
     def old_connect(self, message):
         kafka = KafkaClient(kafka_server + ":9092")
         self.producer = SimpleProducer(kafka)
-        self.topic = 'test'
+        self.topic = topic
 
         try:
             self.producer.send_messages(self.topic, message)
