@@ -14,6 +14,7 @@ import csv
 import json
 import os
 import time
+import sys
 
 import cv2
 import numpy as np
@@ -259,12 +260,17 @@ def save_as_csv(results, run):
         wr.writerow(results)
 
 
-msg_size = 100
+msg_size = 2500000
 msg_payload = ('kafkatest' * 20).encode()[:msg_size]
-msg_count = 50
+msg_count = 5000
 
 
 def python_kafka_producer_performance():
+    msg_size = 2500000
+    msg_payload = b'0'*msg_size #('kafkatest' * 20).encode()[:msg_size]
+    msg_count = 5000
+
+    print("size of msg: {}".format(sys.getsizeof(msg_payload)))
     file = open("producer_time.txt", "a")
     producer = KafkaProducer(bootstrap_servers=[kafka_server + ":9092"])
 

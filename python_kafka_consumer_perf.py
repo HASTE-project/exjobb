@@ -12,7 +12,7 @@ from myvariables import kafka_server
 
 def python_kafka_consumer_performance(consumer_number):
     file = open("consmer_res" + str(consumer_number) + ".txt", "a")
-    topic = 'test5part'
+    topic = 'test'
     msg_count = 0
     print("in multip!")
     file.write("\n{}".format(time.time()))
@@ -28,6 +28,7 @@ def python_kafka_consumer_performance(consumer_number):
     consumer_start = time.time()
 
     for message in consumer:
+        print("hejhej")
        # print("{}, msg nb: {}".format(consumer_number, msg_consumed_count))
         msg_consumed_count += 1
         file.write("\n{}".format(time.time()))
