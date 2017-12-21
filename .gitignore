@@ -18,5 +18,9 @@ file_information.txt
 
 #*.tif
 
+producer_time.txt
+consmer*
+consumer_re*
+
 build
 *.egg-info

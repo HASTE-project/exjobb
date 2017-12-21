@@ -28,7 +28,7 @@ def python_kafka_consumer_performance(consumer_number):
     consumer_start = time.time()
 
     for message in consumer:
-        print("hejhej")
+    #    print("hejhej")
        # print("{}, msg nb: {}".format(consumer_number, msg_consumed_count))
         msg_consumed_count += 1
         file.write("\n{}".format(time.time()))
