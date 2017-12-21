@@ -20,7 +20,8 @@ def python_kafka_consumer_performance(consumer_number):
     consumer = KafkaConsumer(group_id='my-group',
                              auto_offset_reset='earliest',
                              bootstrap_servers=[kafka_server + ":9092"],
-                             consumer_timeout_ms=20000)
+                             consumer_timeout_ms=20000,
+                             max_partition_fetch_bytes=10000000)
 
     msg_consumed_count = 0
     print("msg_count: {}".format(msg_count))

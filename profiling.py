@@ -268,8 +268,8 @@ msg_count = 5000
 
 def python_kafka_producer_performance():
     msg_size = 25
-    msg_payload = b'0'*msg_size #('kafkatest' * 20).encode()[:msg_size]
-    msg_count = 50
+    msg_payload = b'1'*msg_size #('kafkatest' * 20).encode()[:msg_size]
+    msg_count = 2
 
     print("size of msg: {}".format(sys.getsizeof(msg_payload)))
     file = open("producer_time.txt", "a")
@@ -281,7 +281,7 @@ def python_kafka_producer_performance():
     for i in range(msg_count):
         producer.send(topic, msg_payload)
     file.write("\n{}".format(time.time()))
-    producer.flush()  # clear all local buffers and produce pending messages
+   # producer.flush()  # clear all local buffers and produce pending messages
 
     file.close()
     return time.time() - producer_start
