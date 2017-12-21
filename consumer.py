@@ -4,14 +4,14 @@ import numpy as np
 from PIL import Image
 from flask import Response
 from kafka import KafkaConsumer
-from myvariables import kafka_server
+from myvariables import kafka_server, topic
 
 
 def main():
     consumer = KafkaConsumer(group_id=b"my_group_id",
                              bootstrap_servers=[kafka_server + ":9092"])
 
-    consumer.subscribe(topics=['test5part'])
+    consumer.subscribe(topics=[topic])
 
     def events():
         print("in events")
