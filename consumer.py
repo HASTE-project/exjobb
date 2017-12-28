@@ -9,7 +9,8 @@ from myvariables import kafka_server, topic
 
 def main():
     consumer = KafkaConsumer(group_id=b"my_group_id",
-                             bootstrap_servers=[kafka_server + ":9092"])
+                             bootstrap_servers=[kafka_server + ":9092"],
+                             max_partition_fetch_bytes=10000000)
 
     consumer.subscribe(topics=[topic])
 

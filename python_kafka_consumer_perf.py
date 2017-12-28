@@ -15,13 +15,19 @@ def python_kafka_consumer_performance(consumer_number):
   #  topic = TOPIC
     msg_count = 0
     print("in multip!")
+    print(topic)
     file.write("\n{}".format(time.time()))
     #file.write(str(time.perf_counter()))
     consumer = KafkaConsumer(group_id='my-group',
                              auto_offset_reset='earliest',
                              bootstrap_servers=[kafka_server + ":9092"],
+
                              consumer_timeout_ms=30000,
                              max_partition_fetch_bytes=100000000)
+
+
+
+
 
     msg_consumed_count = 0
     print("msg_count: {}".format(msg_count))
