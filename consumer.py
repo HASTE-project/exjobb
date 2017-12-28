@@ -1,9 +1,9 @@
 import cv2
 import numpy as np
-
 from PIL import Image
 from flask import Response
 from kafka import KafkaConsumer
+
 from myvariables import kafka_server, topic
 
 

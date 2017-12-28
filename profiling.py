@@ -13,8 +13,8 @@ This module profiles the simulator, Kafka producer and Kafka consumer with focus
 import csv
 import json
 import os
-import time
 import sys
+import time
 
 import cv2
 import numpy as np
@@ -26,9 +26,8 @@ from skimage import img_as_uint
 from skimage.measure import block_reduce
 
 import kafka_stream_target
-from myvariables import kafka_server
+from myvariables import kafka_server, topic, max_msg_size
 
-from myvariables import topic
 
 def timer_kafka(file_path, to_time):
     """
@@ -140,17 +139,17 @@ def time_kafka_producer(file_path, period, binning, color_channel, connect_kafka
 def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafka):
     #   kafka = KafkaClient("130.239.81.54:9092")
     # producer = SimpleProducer(kafka)
-    producer = KafkaProducer(bootstrap_servers=[kafka_server + ":9092"])
+    producer = KafkaProducer(bootstrap_servers=[kafka_server + ":9092"], max_request_size=max_msg_size)
     # producer = KafkaProducer(bootstrap_servers=['broker1:1234'])
-   # topic = 'test5part'
+    # topic = 'test5part'
     result = []
     files = os.listdir(file_path)
     time_file = open("producer_timer.txt", "a")
     if period == 0:  # Stream as fast as possible.
-        time_file.write("\n start time{}".format(time.time()))    
+        time_file.write("\n start time{}".format(time.time()))
         for file in files:
             if os.path.isfile(file_path + file):
-                if 1==1: #file[-5] in color_channel:  # 5th letter from the end of file name gives the color channel
+                if 1 == 1:  # file[-5] in color_channel:  # 5th letter from the end of file name gives the color channel
                     img = cv2.imread(file_path + file, -1)
                     binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
                     if connect_kafka == "yes":
@@ -158,11 +157,11 @@ def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafk
                         ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
                         as_bytes = jpeg.tobytes()
                         try:
-                         #   start = time.time()
+                            #   start = time.time()
                             print("in try")
                             producer.send(topic, key=str.encode(file), value=as_bytes)
-                          #  stop = time.time()
-                           # result.append(stop - start)
+                        #  stop = time.time()
+                        # result.append(stop - start)
                         except LeaderNotAvailableError:
                             # https://github.com/mumrah/kafka-python/issues/249
                             print("in except")
@@ -200,8 +199,8 @@ def timer_kafka_100bytes():
     """Function which tests how fast writing to a Kafka topic is when the message is 100 bytes."""
     # kafka = KafkaClient("130.239.81.54:9092")
     #  producer = SimpleProducer(kafka)
-    producer = KafkaProducer(bootstrap_servers=[kafka_server + ":9092"])
-   # topic = 'test'
+    producer = KafkaProducer(bootstrap_servers=[kafka_server + ":9092"], max_request_size=max_msg_size)
+    # topic = 'test'
     result = []
     message = b"0" * 67  # overhead of 33 bytes
     for i in range(1000):
@@ -226,7 +225,8 @@ def time_kafka_consumer():
     result = []
 
     consumer = KafkaConsumer(group_id=b"my_group_id",
-                             bootstrap_servers=[kafka_server + ":9092"])
+                             bootstrap_servers=[kafka_server + ":9092"],
+                             max_partition_fetch_bytes=max_msg_size)
 
     consumer.subscribe(topics=topic)
 
@@ -268,12 +268,12 @@ msg_count = 5000
 
 def python_kafka_producer_performance(msg_size):
     # msg_size = 25000
-    msg_payload = b'1'*msg_size #('kafkatest' * 20).encode()[:msg_size]
+    msg_payload = b'1' * msg_size  # ('kafkatest' * 20).encode()[:msg_size]
     msg_count = 2
 
     print("size of msg: {}".format(sys.getsizeof(msg_payload)))
     file = open("producer_time.txt", "a")
-    producer = KafkaProducer(bootstrap_servers=[kafka_server + ":9092"], max_request_size=msg_size+40)
+    producer = KafkaProducer(bootstrap_servers=[kafka_server + ":9092"], max_request_size=max_msg_size)
 
     producer_start = time.time()
     # topic = 'test5part'
@@ -289,20 +289,23 @@ def python_kafka_producer_performance(msg_size):
 
 
 def python_kafka_consumer_performance():
-  #  topic = 'test5part'
+    #  topic = 'test5part'
 
     consumer = KafkaConsumer(
         bootstrap_servers=[kafka_server + ":9092"],
         auto_offset_reset='earliest',  # start at earliest topic
-        group_id=None  # do no offest commit
+        group_id=None,  # do no offest commit
+        max_partition_fetch_bytes=max_msg_size
     )
 
     consumer1 = KafkaConsumer(group_id='my-group',
                               auto_offset_reset='earliest',
-                              bootstrap_servers=[kafka_server + ":9092"])
+                              bootstrap_servers=[kafka_server + ":9092"],
+                              max_partition_fetch_bytes=max_msg_size)
     consumer2 = KafkaConsumer(group_id='my-group',
                               auto_offset_reset='earliest',
-                              bootstrap_servers=[kafka_server + ":9092"])
+                              bootstrap_servers=[kafka_server + ":9092"],
+                              max_partition_fetch_bytes=max_msg_size)
 
     msg_consumed_count = 0
 

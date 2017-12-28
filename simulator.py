@@ -20,7 +20,7 @@ def file_walk_post():
     period = request.form["period"]
     binning = int(request.form["binning"])
     color_channel = request.form.getlist("color_channel")
-    connect_kafka = request.form["kafka"] # Review: better to parse to a boolean here,
+    connect_kafka = request.form["kafka"]  # Review: better to parse to a boolean here,
     #  rather than checking against a string in the other places
     # Review2: better to spec which streaming fw to use?
     period = float(period)
