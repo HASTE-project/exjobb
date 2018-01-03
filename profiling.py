@@ -206,6 +206,7 @@ def time_kafka_producer3(image_size, num_of_img):
         file = '/mnt/volume2/testDatasets/4_9MB5000img/TestIMG5MB.tif'
     elif image_size == 10:
         file = '/mnt/volume2/testDatasets/9_8MB5000img/testIMG9.tif'
+    print(os.path.isfile(file))
 
     try:
         img = cv2.imread(file, -1)
@@ -227,7 +228,7 @@ def time_kafka_producer3(image_size, num_of_img):
              #   as_bytes = jpeg.tobytes()
                 try:
                     print("in try")
-                    producer.send(topic, key=str.encode(file), value=as_bytes)
+                    producer.send(topic, key=str.encode(file), value=b'hoho')
 
                 except LeaderNotAvailableError:
                     print("in except")
