@@ -219,7 +219,7 @@ def time_kafka_producer3(image_size, num_of_img):
     except:
         print('Set image_size to 2.5, 5 or 10!')
 
-
+    count = 0
     for i in range(num_of_img):
 
        # if os.path.isfile(file_path + file):
@@ -231,12 +231,9 @@ def time_kafka_producer3(image_size, num_of_img):
             #    ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
              #   as_bytes = jpeg.tobytes()
                 try:
-
-
-
-
+                    count = count + 1
 #                    print("in try, topic {}".format(topic))
-                    producer.send(topic, key=str.encode(file), value='as_bytes')
+                    producer.send(topic, key=str.encode(file), value=as_bytes)
 
 
                 except LeaderNotAvailableError:
@@ -248,7 +245,7 @@ def time_kafka_producer3(image_size, num_of_img):
     producer.flush()
     time_file.write("\n stop time{}".format(time.time()))
     time_file.close()
-
+    print(count)
     return result
 
 
