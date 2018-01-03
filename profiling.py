@@ -195,6 +195,53 @@ def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafk
     return result
 
 
+def time_kafka_producer3(image_size, num_of_img):
+    producer = KafkaProducer(bootstrap_servers=[kafka_server + ":9092"], max_request_size=max_msg_size)
+    result = []
+    time_file = open("producer_timer.txt", "a")
+    time_file.write("\n start time{}".format(time.time()))
+    if image_size == 2.5:
+        file = '/mnt/volume2/testDatasets/2_5MB5000img/testImg9.tif'
+    elif image_size == 5:
+        file = '/mnt/volume2/testDatasets/4_9MB5000img/TestIMG5MB.tif'
+    elif image_size == 10:
+        file = '/mnt/volume2/testDatasets/9_8MB5000img/testIMG9.tif'
+
+    try:
+        img = cv2.imread(file, -1)
+        binned_img = block_reduce(img, block_size=(1, 1), func=np.sum)
+        ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
+        as_bytes = jpeg.tobytes()
+    except:
+        print('Set image_size to 2.5, 5 or 10!')
+
+
+    for i in range(num_of_img):
+       # if os.path.isfile(file_path + file):
+        #    if 1 == 1:  # file[-5] in color_channel:  # 5th letter from the end of file name gives the color channel
+         #       img = cv2.imread(file_path + file, -1)
+          #      binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
+                # if connect_kafka == "yes":
+               # print("hohoho")
+            #    ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
+             #   as_bytes = jpeg.tobytes()
+                try:
+                    print("in try")
+                    producer.send(topic, key=str.encode(file), value=as_bytes)
+
+                except LeaderNotAvailableError:
+                    print("in except")
+                    time.sleep(1)
+                    producer.send(topic, key=str.encode(file), value=as_bytes)
+                    # print_response(producer.send_messages(topic, as_bytes))
+
+
+    time_file.write("\n stop time{}".format(time.time()))
+    time_file.close()
+
+    return result
+
+
 def timer_kafka_100bytes():
     """Function which tests how fast writing to a Kafka topic is when the message is 100 bytes."""
     # kafka = KafkaClient("130.239.81.54:9092")
