@@ -211,6 +211,7 @@ def time_kafka_producer3(image_size, num_of_img):
         file = '/mnt/volume2/testDatasets/9_8MB5000img/testIMG9.tif'
     print(os.path.isfile(file))
 
+    count = 0
     try:
         img = cv2.imread(file, -1)
         binned_img = block_reduce(img, block_size=(1, 1), func=np.sum)
@@ -227,7 +228,8 @@ def time_kafka_producer3(image_size, num_of_img):
             #    ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
             #   as_bytes = jpeg.tobytes()
             try:
-                print("in try, topic {}".format(topic))
+                count = count + 1
+                #  print("in try, topic {}".format(topic))
                 producer.send(topic, key=str.encode(file), value=as_bytes)
 
             except LeaderNotAvailableError:
@@ -237,32 +239,6 @@ def time_kafka_producer3(image_size, num_of_img):
                 # print_response(producer.send_messages(topic, as_bytes))
     except:
         print('Set image_size to 2.5, 5 or 10!')
-
-
-
-    
-
-   
-  
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     producer.flush()
     time_file.write("\n stop time{}".format(time.time()))
