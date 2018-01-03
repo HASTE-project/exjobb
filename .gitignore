@@ -24,3 +24,5 @@ consumer_re*
 
 build
 *.egg-info
+.DS_Store
+**.orig
