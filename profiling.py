@@ -153,12 +153,12 @@ def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafk
                     img = cv2.imread(file_path + file, -1)
                     binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
                     if connect_kafka == "yes":
-                        print("hohoho")
+                       # print("hohoho")
                         ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
                         as_bytes = jpeg.tobytes()
                         try:
                             #   start = time.time()
-                            print("in try")
+                        #    print("in try")
                             producer.send(topic, key=str.encode(file), value=as_bytes)
                         #  stop = time.time()
                         # result.append(stop - start)
