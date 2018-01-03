@@ -201,10 +201,13 @@ def time_kafka_producer3(image_size, num_of_img):
     time_file = open("producer_timer.txt", "a")
     time_file.write("\n start time{}".format(time.time()))
     if image_size == 2.5:
+        print("in if")
         file = '/mnt/volume2/testDatasets/2_5MB5000img/testImg9.tif'
     elif image_size == 5:
+        print("in 5")
         file = '/mnt/volume2/testDatasets/4_9MB5000img/TestIMG5MB.tif'
     elif image_size == 10:
+        print("in 10")
         file = '/mnt/volume2/testDatasets/9_8MB5000img/testIMG9.tif'
 
     try:
