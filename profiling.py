@@ -201,10 +201,13 @@ def time_kafka_producer3(image_size, num_of_img):
     time_file = open("producer_timer.txt", "a")
     time_file.write("\n start time{}".format(time.time()))
     if image_size == 2.5:
+        print("in if")
         file = '/mnt/volume2/testDatasets/2_5MB5000img/testImg9.tif'
     elif image_size == 5:
+        print("in 5")
         file = '/mnt/volume2/testDatasets/4_9MB5000img/TestIMG5MB.tif'
     elif image_size == 10:
+        print("in 10")
         file = '/mnt/volume2/testDatasets/9_8MB5000img/testIMG9.tif'
     print(os.path.isfile(file))
 
@@ -218,6 +221,7 @@ def time_kafka_producer3(image_size, num_of_img):
 
 
     for i in range(num_of_img):
+
        # if os.path.isfile(file_path + file):
         #    if 1 == 1:  # file[-5] in color_channel:  # 5th letter from the end of file name gives the color channel
          #       img = cv2.imread(file_path + file, -1)
@@ -227,8 +231,13 @@ def time_kafka_producer3(image_size, num_of_img):
             #    ret, jpeg = cv2.imencode('.tif', img_as_uint(binned_img))
              #   as_bytes = jpeg.tobytes()
                 try:
-                    print("in try")
-                    producer.send(topic, key=str.encode(file), value=b'hoho')
+
+
+
+
+#                    print("in try, topic {}".format(topic))
+                    producer.send(topic, key=str.encode(file), value='as_bytes')
+
 
                 except LeaderNotAvailableError:
                     print("in except")
@@ -236,7 +245,7 @@ def time_kafka_producer3(image_size, num_of_img):
                     producer.send(topic, key=str.encode(file), value=as_bytes)
                     # print_response(producer.send_messages(topic, as_bytes))
 
-
+    producer.flush()
     time_file.write("\n stop time{}".format(time.time()))
     time_file.close()
 
