@@ -29,7 +29,7 @@ import kafka_stream_target
 from myvariables import kafka_server, topic, max_msg_size
 
 
-def timer_kafka(file_path, to_time):
+def timer_kafka(file_path, to_time, num_of_img):
     """
     Function to time the simulator or the Kafka producer. The results are saved in a csv file named as the
     run. The inputs are given as a json-file where multiple runs with different settings can be defined at once.
@@ -60,7 +60,7 @@ def timer_kafka(file_path, to_time):
         if to_time == "p":
             result = time_kafka_producer(file_path, period, binning, color_channel, connect_kafka)
         elif to_time == "p2":
-            result = time_kafka_producer2(file_path, period, binning, color_channel, connect_kafka)
+            result = time_kafka_producer2(file_path, period, binning, color_channel, connect_kafka, num_of_img)
         elif to_time == "g":
             result = time_get_files(file_path, period, binning, color_channel, connect_kafka)
         else:
@@ -136,7 +136,7 @@ def time_kafka_producer(file_path, period, binning, color_channel, connect_kafka
     return result
 
 
-def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafka):
+def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafka, num_of_img):
     #   kafka = KafkaClient("130.239.81.54:9092")
     # producer = SimpleProducer(kafka)
     producer = KafkaProducer(bootstrap_servers=[kafka_server + ":9092"], max_request_size=max_msg_size)
@@ -145,9 +145,12 @@ def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafk
     result = []
     files = os.listdir(file_path)
     time_file = open("producer_timer.txt", "a")
+    count = 0
     if period == 0:  # Stream as fast as possible.
         time_file.write("\n start time{}".format(time.time()))
         for file in files:
+            if count == num_of_img:
+                break
             if os.path.isfile(file_path + file):
                 if 1 == 1:  # file[-5] in color_channel:  # 5th letter from the end of file name gives the color channel
                     img = cv2.imread(file_path + file, -1)
@@ -160,6 +163,7 @@ def time_kafka_producer2(file_path, period, binning, color_channel, connect_kafk
                             #   start = time.time()
                             #    print("in try")
                             producer.send(topic, key=str.encode(file), value=as_bytes)
+                            count = count + 1
                         #  stop = time.time()
                         # result.append(stop - start)
                         except LeaderNotAvailableError:
@@ -240,7 +244,9 @@ def time_kafka_producer3(image_size, num_of_img):
     except:
         print('Set image_size to 2.5, 5 or 10!')
 
+    time.sleep(10)
     producer.flush()
+ #   producer = KafkaProducer(retries=1)
     time_file.write("\n stop time{}".format(time.time()))
     time_file.close()
     print(count)
