@@ -1,0 +1,7 @@
+
+ combine with "consumer 10 partitions"
+ start time1514542435.6530766
+ stop time1514542990.3486602
+combine with consumer 5 partitions"
+ start time1514543479.1833243
+ stop time1514544081.9858356
