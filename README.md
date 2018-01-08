@@ -10,8 +10,8 @@ The simulator can either be run on its own or connected with Kafka. To run it wi
 
 cv2, numpy, PIL, Flask, kafka-python, scikit-image 
 
-To stream to Harmonic IO, the stream connector is needed: https://github.com/beirbear/HarmonicSC/
-
+To stream to Harmonic IO, the stream connector is needed (branch with container support): 
+https://github.com/benblamey/HarmonicIO
 
 ### Installing
 
@@ -40,11 +40,16 @@ git pull https://github.com/LovisaLugnegard/exjobb.git
 python3 simulator.py
 ```
 ### To use without UI
+
+See `example_*.py`
+
 ```
 import simulator_no_flask
 simulator_no_flask.get_files(file_path, period, binning, color_channel, connect_kafka) # period = period time in seconds,  color_channel given as
 	#list with up to 5 channels ie. ["1", "2", "5"], connect_kafka set to "yes" for Kafka server connection
 ```
+
+
 ### To run profiling tests with multiple runs at once:
 ```
 import profiling

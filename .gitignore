@@ -24,3 +24,5 @@ producer_time.txt
 
 build
 *.egg-info
+.DS_Store
+**.orig
