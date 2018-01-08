@@ -1,7 +1,8 @@
 import simulator_no_flask
 
-ip = '130.238.89.140'
+# Feel free to modify params here for testing, etc.
 
+ip = '130.238.89.140'
 dir = './test-images'
 
 # This pipeline was for ben to test simulator integration
