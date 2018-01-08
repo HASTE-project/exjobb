@@ -102,7 +102,8 @@ def get_file(file_path, color_channel, binning, stream_id, stream_target=None):
             'stream_id': stream_id,
             'timestamp': time.time(),
             'location': (12.34, 56.78),
-            'image_length_bytes': len(image_bytes_tiff)
+            'image_length_bytes': len(image_bytes_tiff),
+            'original_filename': file_name
         }
 
         stream_target.send_message(image_bytes_tiff, file_name, metadata)
