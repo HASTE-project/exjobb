@@ -15,6 +15,11 @@ hio_config_ben_test_haste_example = {'master_host': ip,
                                      'container_name': 'benblamey/haste-example:latest',
                                      'container_os': 'ubuntu'}
 
+hio_config_hw_image_proc = {'master_host': ip,
+                            'master_port': 8080,
+                            'container_name': 'benblamey/haste-image-proc:latest',
+                            'container_os': 'ubuntu'}
+
 hio_config_hokan = {'master_host': '130.239.81.126',
                     'master_port': 8080,
                     'container_name': 'hakanwie/test:batch_hist2',
@@ -22,5 +27,5 @@ hio_config_hokan = {'master_host': '130.239.81.126',
 
 # get_files(file_path, period, binning, color_channel, send_to_target):
 simulator_no_flask.get_files(dir, 0.01, None, None, "yes",
-                             hio_config=hio_config_ben_test_haste_example,
+                             hio_config=hio_config_hw_image_proc,
                              stream_id_tag='dummy_set')
