@@ -3,7 +3,7 @@ import simulator_no_flask
 # ** This script should be maintained to work on the production pipeline in the SNIC cloud **
 
 ip = '192.168.1.24'
-dir = '/mnt/volume2/testDatasets/0'
+dir = '/mnt/ImageData/testDatasets/0'
 
 hio_config_ben_test_hio_example = {'master_host': ip,
                                    'master_port': 8080,

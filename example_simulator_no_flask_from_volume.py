@@ -2,7 +2,7 @@ import simulator_no_flask
 
 # Feel free to modify params here for testing, etc.
 
-dir = '/mnt/volume2/testDatasets/0'
+dir = '/mnt/ImageData/testDatasets/0'
 ip = '192.168.1.24'
 
 # This pipeline was for ben to test simulator integration
