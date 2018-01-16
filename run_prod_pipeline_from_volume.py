@@ -28,4 +28,4 @@ hio_config_hw_image_proc = {'master_host': ip,
 # get_files(file_path, period, binning, color_channel, send_to_target):
 simulator_no_flask.get_files(dir, 0.01, None, None, "yes",
                              hio_config=hio_config_hw_image_proc,
-                             stream_id_tag='test_dataset')
+                             stream_id_tag='test_dataset_0')
