@@ -11,7 +11,7 @@ The simulator can either be run on its own or connected with Kafka. To run it wi
 cv2, numpy, PIL, Flask, kafka-python, scikit-image 
 
 To stream to Harmonic IO, the stream connector is needed (with container support): 
-https://github.com/benblamey/HarmonicIO (see 'Install the Streaming Connector only')
+https://github.com/HASTE-project/HarmonicIO (see 'Install the Streaming Connector only')
 
 ### Installing
 
@@ -20,7 +20,7 @@ For installation in development mode:
 A step by step series of examples that tell you have to get a development env running
 
 ```
-git clone https://github.com/LovisaLugnegard/exjobb.git
+git clone https://github.com/HASTE-project/microscope-simulator.git
 
 ```
 
@@ -28,7 +28,7 @@ git clone https://github.com/LovisaLugnegard/exjobb.git
 
 ```
 cd exjobb
-git pull https://github.com/LovisaLugnegard/exjobb.git
+git pull https://github.com/HASTE-project/microscope-simulator.git
 
 ```
 
