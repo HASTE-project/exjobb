@@ -30,7 +30,11 @@ def parse_azn_file_name(filename):
         'time_line_number': int(match.group(5)),  # 0001 to 9999
         'action_list_number': int(match.group(6)),  # 0001 to 9999
         'z_index_3d': int(match.group(7)),  # 01 to 99
-        'imaging_color_channel': int(match.group(8)),  # 01 to 99
+        'color_channel': int(match.group(8)),  # 01 to 99  # TODO: convert this to 'red' etc.?
+        # channel 1 is the red / orange channel with LNP particles,
+        # Channel 2 is the green channel with the GFP expression and
+        # channel 3 is a bright field channel where you see the cells.
+        # Channel 4 is a failed staining only showing dead cells or cells not stuck to the bottom of the well
     }
 
     return metadata
