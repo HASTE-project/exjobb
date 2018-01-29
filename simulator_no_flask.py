@@ -70,7 +70,7 @@ def get_files(image_directory_path, period, binning, color_channel_filter, send_
     # Filter on color channel:
     if color_channel_filter is not None:
         files = {filename: file_info for filename, file_info in files.items()
-                 if file_info['color_channel'] == color_channel_filter}
+                 if file_info['color_channel'] in color_channel_filter}
 
     # TODO: group into set of images with all colors, and send as a single message.
 
