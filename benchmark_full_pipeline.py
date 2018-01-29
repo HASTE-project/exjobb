@@ -33,7 +33,7 @@ benchmarking.enable()
 
 benchmark_full_pipeline_start = benchmarking.start_benchmark()
 
-stream_id = str(run_prod_pipeline_from_volume.run())
+stream_id = run_prod_pipeline_from_volume.run()
 #stream_id = str(run_prod_pipeline_dummy_set.run())
 
 print('Stream ID is:' + stream_id)
@@ -45,7 +45,7 @@ mongo_client = MongoClient('mongodb://192.168.1.7:27017')
 mongo_db = mongo_client.streams
 
 # The name of the MongoDB collection is the stream ID:
-collection = mongo_db[stream_id]
+collection = mongo_db['strm_' + stream_id]
 
 wait_for_record_count(collection, target_count=500)
 
