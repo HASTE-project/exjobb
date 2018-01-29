@@ -10,14 +10,18 @@ python3 run_prod_pipeline_from_volume.py | tee >(grep --line-buffered "^benchmar
 __enabled = False
 __printed_header = False
 
+
 def enable():
+    global __enabled
     __enabled = True
+
 
 def start_benchmark():
     return time.time()
 
 
 def end_benchmark(file, topic, started_at_time, description='', number_of_bytes=-1):
+    global __enabled
     if not __enabled:
         return
 
