@@ -83,20 +83,21 @@ def get_files(image_directory_path, period, binning, color_channel_filter, send_
 
     print("simulator: all files streamed")
 
-    benchmarking.end_benchmark('siumulator_no_flask', 'stream_all_images', benchmark_started_streaming)
+    benchmarking.end_benchmark('simulator_no_flask', 'stream_all_images', benchmark_started_streaming)
 
     return stream_id
 
-def __stream_file(file_name, file_metadata, binning, stream_id, stream_target=None):
+
+def __stream_file(file_name, file_metadata, binning, stream_id, stream_target):
     # take one file, read, convert and send to the streaming framework.
 
-    image_bytes_tiff = __prepare_image_bytes(binning, file_metadata)
+    image_bytes_tiff = __prepare_image_bytes(binning, file_metadata['full_path'])
     print("file: {} has size: {}".format(file_name, len(image_bytes_tiff)))
 
-    file_metadata['stream_id'] = stream_id,
-    file_metadata['timestamp'] = time.time(),
-    file_metadata['location'] = (12.34, 56.78),
-    file_metadata['image_length_bytes'] = len(image_bytes_tiff),
+    file_metadata['stream_id'] = stream_id
+    file_metadata['timestamp'] = time.time()
+    file_metadata['location'] = (12.34, 56.78)
+    file_metadata['image_length_bytes'] = len(image_bytes_tiff)
     file_metadata['original_filename'] = file_name
 
     if stream_target is not None:
@@ -104,14 +105,14 @@ def __stream_file(file_name, file_metadata, binning, stream_id, stream_target=No
         # print("prod: {} topic: {}".format(producer, topic))
         benchmark_send_image = benchmarking.start_benchmark()
         stream_target.send_message(image_bytes_tiff, file_name, file_metadata)
-        benchmarking.end_benchmark('siumulator_no_flask', 'stream_file', benchmark_send_image)
+        benchmarking.end_benchmark('simulator_no_flask', 'stream_file', benchmark_send_image)
 
 
-def __prepare_image_bytes(binning, file_metadata):
+def __prepare_image_bytes(binning, file_path):
     benchmark_start_image = benchmarking.start_benchmark()
 
-    img = cv2.imread(file_metadata['full_path'], -1)
-    benchmarking.end_benchmark('siumulator_no_flask', 'read_image_from_disk', benchmark_start_image)
+    img = cv2.imread(file_path, -1)  # -1: Load colors as they are.
+    benchmarking.end_benchmark('simulator_no_flask', 'read_image_from_disk', benchmark_start_image)
 
     benchmark_binning = benchmarking.start_benchmark()
     if binning is not None:
@@ -120,7 +121,7 @@ def __prepare_image_bytes(binning, file_metadata):
         binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
     else:
         binned_img = img
-    benchmarking.end_benchmark('siumulator_no_flask', 'image_binning', benchmark_binning)
+    benchmarking.end_benchmark('simulator_no_flask', 'image_binning', benchmark_binning)
 
     # Convert image to bytes:
     benchmark_to_bytes = benchmarking.start_benchmark()
@@ -128,9 +129,9 @@ def __prepare_image_bytes(binning, file_metadata):
 
     image_bytes_tiff = image_bytes_tiff.tobytes()
 
-    benchmarking.end_benchmark('siumulator_no_flask', 'image_to_bytes', benchmark_to_bytes)
+    benchmarking.end_benchmark('simulator_no_flask', 'image_to_bytes', benchmark_to_bytes)
 
 
-    benchmarking.end_benchmark('siumulator_no_flask', 'prepare_image_bytes_method', benchmark_start_image)
+    benchmarking.end_benchmark('simulator_no_flask', 'prepare_image_bytes_method', benchmark_start_image)
 
     return image_bytes_tiff
