@@ -25,7 +25,15 @@ hio_config_hw_image_proc = {'master_host': ip,
                             'container_name': 'benblamey/haste-image-proc:latest',
                             'container_os': 'ubuntu'}
 
-# get_files(file_path, period, binning, color_channel, send_to_target):
-simulator_no_flask.get_files(dir, 0.01, None, None, "yes",
-                             hio_config=hio_config_hw_image_proc,
-                             stream_id_tag='test_dataset_0')
+
+def run():
+    # get_files(file_path, period, binning, color_channel, send_to_target):
+    stream_id = simulator_no_flask.get_files(dir, 0.01, None, None, "yes",
+                                             hio_config=hio_config_hw_image_proc,
+                                             stream_id_tag='test_dataset_0')
+
+    return stream_id
+
+
+if __name__ == '__main__':
+    run()

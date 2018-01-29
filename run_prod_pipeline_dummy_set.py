@@ -26,6 +26,13 @@ hio_config_hokan = {'master_host': '130.239.81.126',
                     'container_os': 'ubuntu'}
 
 # get_files(file_path, period, binning, color_channel, send_to_target):
-simulator_no_flask.get_files(dir, 0.01, None, None, "yes",
-                             hio_config=hio_config_hw_image_proc,
-                             stream_id_tag='dummy_set')
+
+
+def run():
+    simulator_no_flask.get_files(dir, 0.01, None, None, "yes",
+                                 hio_config=hio_config_hw_image_proc,
+                                 stream_id_tag='dummy_set')
+
+
+if __name__ == '__main__':
+    run()

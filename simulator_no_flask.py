@@ -85,6 +85,7 @@ def get_files(image_directory_path, period, binning, color_channel_filter, send_
 
     benchmarking.end_benchmark('siumulator_no_flask', 'stream_all_images', benchmark_started_streaming)
 
+    return stream_id
 
 def __stream_file(file_name, file_metadata, binning, stream_id, stream_target=None):
     # take one file, read, convert and send to the streaming framework.

@@ -3,10 +3,13 @@ import time
 """
 Use like this to generate CSV output:
 python3 example_simulator_no_flask_dummy_set.py | tee >(grep --line-buffered "^benchmarking," > benchmarking.csv)
+
+python3 run_prod_pipeline_from_volume.py | tee >(grep --line-buffered "^benchmarking," > benchmarking.csv)
 """
 
 
 __printed_header = False
+
 
 def start_benchmark():
     return time.time()
