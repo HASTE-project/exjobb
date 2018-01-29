@@ -14,6 +14,7 @@ connect_kafka: set to "yes" is Kafka is used as a streaming framework.
 import datetime
 import os
 import time
+import azn_filenames
 
 import cv2
 import numpy as np
@@ -23,28 +24,30 @@ from skimage.measure import block_reduce
 from hio_stream_target import HarmonicIOStreamTarget
 
 
-def get_files(directory_path, period, binning, color_channel, send_to_target, hio_config=None, stream_id_tag='ll'):
+def get_files(image_directory_path, period, binning, color_channel_filter, send_to_target, hio_config=None,
+              stream_id_tag='ll'):
     """
     This function retrieves files and creates a stream of files to be used as a microscope simulator.
-    :param directory_path: path to directory containing image test data set files
+    :param image_directory_path: path to directory containing image test data set files
     :param period: The time period between every image (setting to 0 gives minimal time period)
     :param binning: specify the binning (reduce the number of pixels to compress the image), this is given as an
     int. Or 'None' to use the original image.
-    :param color_channel: filter files according to color channels to send (according to AZ convention), the channels
+    :param color_channel_filter: filter files according to color channels to send (according to AZ convention), the channels
     are given as a list eg. ['1', '2'] (the Yokogawa microscope can have up to five color channels).
     Or 'None' to include all files.
     :param send_to_target: specify if the simulator shall stream images somewhere else with streaming framework
     :param hio_config: configuration dict for HarmonicIO integration. (see: hio_stream_target.py)
     :param stream_id_tag: string to use in stream ID
     """
-    files = os.listdir(directory_path)
+    files = os.listdir(image_directory_path)
+    files = [file for file in files if not file.startswith('.')]
     print("simulator: list of files to stream:")
     print(files)
-    stream_target = None
 
     stream_id = datetime.datetime.today().strftime('%Y_%m_%d__%H_%M_%S') + '_' + stream_id_tag
     print("simulator: stream ID is: " + stream_id)
 
+    stream_target = None
     if send_to_target == "yes":
         # connect to stream target:
         # stream_target = KafkaStreamTarget() # TODO - pick one here. (or pass it in).
@@ -58,28 +61,46 @@ def get_files(directory_path, period, binning, color_channel, send_to_target, hi
     # producer = None
     # topic = None
 
+    files = {filename: azn_filenames.parse_azn_file_name(filename) for filename in files}
+
+    # Add full path:
     for filename in files:
-        full_path = os.path.join(directory_path, filename)
-        if os.path.isfile(full_path):
-            get_file(full_path, color_channel, binning, stream_id, stream_target)
-        else:
-            print(directory_path + filename + ' is not a file')
-        time.sleep(period) # TODO: we haven't allocated any time since the last image was sent ?!
+        files[filename]['full_path'] = os.path.join(image_directory_path, filename)
+
+    # Filter on color channel:
+    if color_channel_filter is not None:
+        files = {filename: file_info for filename, file_info in files.items()
+                 if file_info['color_channel'] in color_channel_filter}
+
+    # TODO: group into set of images with all colors, and send as a single message.
+
+    for filename, file_info in files.items():
+        __stream_file(filename, file_info, binning, stream_id, stream_target)
+        time.sleep(period)  # TODO: we haven't allocated any time since the last image was sent ?!
+
     print("simulator: all files streamed")
 
 
-def get_file(file_path, color_channel, binning, stream_id, stream_target=None):
-    """
-    This function takes one file, checks if it has the correct color channel, reads and converts the file and
-    sends it to the streaming framework.
-    """
-    file_name = os.path.basename(file_path)
+def __stream_file(file_name, file_metadata, binning, stream_id, stream_target=None):
+    # take one file, read, convert and send to the streaming framework.
 
-    # In the AZ dataset, a particular character indicates the color channel:
-    if color_channel is not None and file_name[-5] not in color_channel:
-        return
+    image_bytes_tiff = __prepare_image_bytes(binning, file_metadata)
+    print("file: {} has size: {}".format(file_name, len(image_bytes_tiff)))
 
-    img = cv2.imread(file_path, -1)
+    file_metadata['stream_id'] = stream_id,
+    file_metadata['timestamp'] = time.time(),
+    file_metadata['location'] = (12.34, 56.78),
+    file_metadata['image_length_bytes'] = len(image_bytes_tiff),
+    file_metadata['original_filename'] = file_name
+
+    if stream_target is not None:
+        # print(topic)
+        # print("prod: {} topic: {}".format(producer, topic))
+        stream_target.send_message(image_bytes_tiff, file_name, file_metadata)
+
+
+def __prepare_image_bytes(binning, file_metadata):
+    img = cv2.imread(file_metadata['full_path'], -1)
 
     if binning is not None:
         # BB: this doesn't work with an ordinary PNG with 2 arguments in the block size.
@@ -88,22 +109,8 @@ def get_file(file_path, color_channel, binning, stream_id, stream_target=None):
     else:
         binned_img = img
 
-    if stream_target is not None:
-        # Convert image to bytes:
-        ret, image_bytes_tiff = cv2.imencode('.tif', img_as_uint(binned_img))
+    # Convert image to bytes:
+    ret, image_bytes_tiff = cv2.imencode('.tif', img_as_uint(binned_img))
 
-        image_bytes_tiff = image_bytes_tiff.tobytes()
-        print("file: {} has size: {}".format(file_path, len(image_bytes_tiff)))
-
-        # print(topic)
-        # print("prod: {} topic: {}".format(producer, topic))
-
-        metadata = {
-            'stream_id': stream_id,
-            'timestamp': time.time(),
-            'location': (12.34, 56.78),
-            'image_length_bytes': len(image_bytes_tiff),
-            'original_filename': file_name
-        }
-
-        stream_target.send_message(image_bytes_tiff, file_name, metadata)
+    image_bytes_tiff = image_bytes_tiff.tobytes()
+    return image_bytes_tiff
