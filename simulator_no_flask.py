@@ -15,7 +15,7 @@ import datetime
 import os
 import time
 import azn_filenames
-
+import benchmarking
 import cv2
 import numpy as np
 from skimage import img_as_uint
@@ -35,10 +35,13 @@ def get_files(image_directory_path, period, binning, color_channel_filter, send_
     :param color_channel_filter: filter files according to color channels to send (according to AZ convention), the channels
     are given as a list eg. ['1', '2'] (the Yokogawa microscope can have up to five color channels).
     Or 'None' to include all files.
-    :param send_to_target: specify if the simulator shall stream images somewhere else with streaming framework
+    :param send_to_target: specify if the simulator shall stream images somewhere else with streaming framework. String, e.g. 'yes'
     :param hio_config: configuration dict for HarmonicIO integration. (see: hio_stream_target.py)
     :param stream_id_tag: string to use in stream ID
     """
+
+    benchmark_started_streaming = benchmarking.start_benchmark()
+
     files = os.listdir(image_directory_path)
     files = [file for file in files if not file.startswith('.')]
     print("simulator: list of files to stream:")
@@ -48,7 +51,7 @@ def get_files(image_directory_path, period, binning, color_channel_filter, send_
     print("simulator: stream ID is: " + stream_id)
 
     stream_target = None
-    if send_to_target == "yes":
+    if send_to_target == 'yes':  # TODO: convert to boolean.
         # connect to stream target:
         # stream_target = KafkaStreamTarget() # TODO - pick one here. (or pass it in).
         stream_target = HarmonicIOStreamTarget(hio_config)
@@ -80,6 +83,8 @@ def get_files(image_directory_path, period, binning, color_channel_filter, send_
 
     print("simulator: all files streamed")
 
+    benchmarking.end_benchmark('siumulator_no_flask', 'stream_all_images', benchmark_started_streaming)
+
 
 def __stream_file(file_name, file_metadata, binning, stream_id, stream_target=None):
     # take one file, read, convert and send to the streaming framework.
@@ -96,21 +101,31 @@ def __stream_file(file_name, file_metadata, binning, stream_id, stream_target=No
     if stream_target is not None:
         # print(topic)
         # print("prod: {} topic: {}".format(producer, topic))
+        benchmark_send_image = benchmarking.start_benchmark()
         stream_target.send_message(image_bytes_tiff, file_name, file_metadata)
+        benchmarking.end_benchmark('siumulator_no_flask', 'stream_file', benchmark_send_image)
 
 
 def __prepare_image_bytes(binning, file_metadata):
-    img = cv2.imread(file_metadata['full_path'], -1)
+    benchmark_start_image = benchmarking.start_benchmark()
 
+    img = cv2.imread(file_metadata['full_path'], -1)
+    benchmarking.end_benchmark('siumulator_no_flask', 'read_image_from_disk', benchmark_start_image)
+
+    benchmark_binning = benchmarking.start_benchmark()
     if binning is not None:
         # BB: this doesn't work with an ordinary PNG with 2 arguments in the block size.
         # BB: this seems to work on an ordinary image with 3 arguments - color channels?
         binned_img = block_reduce(img, block_size=(binning, binning), func=np.sum)
     else:
         binned_img = img
+    benchmarking.end_benchmark('siumulator_no_flask', 'image_binning', benchmark_binning)
 
     # Convert image to bytes:
+    benchmark_to_bytes = benchmarking.start_benchmark()
     ret, image_bytes_tiff = cv2.imencode('.tif', img_as_uint(binned_img))
-
     image_bytes_tiff = image_bytes_tiff.tobytes()
+    benchmarking.end_benchmark('siumulator_no_flask', 'image_to_bytes', benchmark_to_bytes)
+
+    benchmarking.end_benchmark('siumulator_no_flask', 'prepare_image_bytes_method', benchmark_start_image)
     return image_bytes_tiff
