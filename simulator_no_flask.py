@@ -125,8 +125,12 @@ def __prepare_image_bytes(binning, file_metadata):
     # Convert image to bytes:
     benchmark_to_bytes = benchmarking.start_benchmark()
     ret, image_bytes_tiff = cv2.imencode('.tif', img_as_uint(binned_img))
+
     image_bytes_tiff = image_bytes_tiff.tobytes()
+
     benchmarking.end_benchmark('siumulator_no_flask', 'image_to_bytes', benchmark_to_bytes)
 
+
     benchmarking.end_benchmark('siumulator_no_flask', 'prepare_image_bytes_method', benchmark_start_image)
+
     return image_bytes_tiff

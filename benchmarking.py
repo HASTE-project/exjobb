@@ -7,15 +7,20 @@ python3 example_simulator_no_flask_dummy_set.py | tee >(grep --line-buffered "^b
 python3 run_prod_pipeline_from_volume.py | tee >(grep --line-buffered "^benchmarking," > benchmarking.csv)
 """
 
-
+__enabled = False
 __printed_header = False
 
+def enable():
+    __enabled = True
 
 def start_benchmark():
     return time.time()
 
 
 def end_benchmark(file, topic, started_at_time, description='', number_of_bytes=-1):
+    if not __enabled:
+        return
+
     global __printed_header
     ended_time = time.time()
 
@@ -45,5 +50,6 @@ def end_benchmark(file, topic, started_at_time, description='', number_of_bytes=
 
 
 if __name__ == '__main__':
+    enable()
     start = start_benchmark()
     end_benchmark('foo_file','foo_topic', start, description='foo description', number_of_bytes=5)
