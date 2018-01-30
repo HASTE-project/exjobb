@@ -25,6 +25,11 @@ hio_config_hw_image_proc = {'master_host': ip,
                             'container_name': 'benblamey/haste-image-proc:latest',
                             'container_os': 'ubuntu'}
 
+hio_config_hw_image_proc_profiling = {'master_host': ip,
+                                      'master_port': 8080,
+                                      'container_name': 'benblamey/haste-image-proc:latest-profiling',
+                                      'container_os': 'ubuntu'}
+
 
 def run():
     # get_files(file_path, period, binning, color_channel, send_to_target):
