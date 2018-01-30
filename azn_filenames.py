@@ -2,7 +2,7 @@ import re
 
 # Parse Filenames for AstraZeneca dataset:
 
-__pattern = re.compile('^([0-9]+)?'  # Docs states this should be part of Plate ID, but looks like an additional image seq. number field?
+__pattern = re.compile('^([0-9]+)?'  # sequence number, but only in the test sets
                        + '(.+)_'  # Plate ID
                        + '([A-Za-z]+[0-9]+)_'  # Well
                        + 'T([0-9]{4})+'  # tpIndex
@@ -44,13 +44,23 @@ def parse_azn_file_name(filename):
     return metadata
 
 
+def test(filenames, golden_metadata):
+    for name in filenames:
+        metadata = parse_azn_file_name(name)
+        print(metadata)
+
+        if golden_metadata != metadata:
+            raise Exception('golden metadata does not match!')
+        else:
+            print('metadata is match!')
+
+
 if __name__ == '__main__':
-    names = [
+    filenames = [
         '0101AssayPlate_NUNC_#165305-1_F05_T0038F002L01A02Z01C01.tif',
         '0101AssayPlate_NUNC_#165305-1_F05_T0038F002L01A02Z01C01.tiff',
         '0101AssayPlate_NUNC_#165305-1_F05_T0038F002L01A02Z01C01.bmp',
         '0101AssayPlate_NUNC_#165305-1_F05_T0038F002L01A02Z01C01']
-
     golden_metadata = {
         'image_sequence_number': 101,
         'assay_plate_name': 'AssayPlate_NUNC_#165305-1',
@@ -61,12 +71,18 @@ if __name__ == '__main__':
         'action_list_number': 2,
         'z_index_3d': 1,
         'color_channel': 1}
+    test(filenames, golden_metadata)
 
-    for name in names:
-        metadata = parse_azn_file_name(name)
-        print(metadata)
-
-        if golden_metadata != metadata:
-            raise Exception('golden metadata does not match!')
-        else:
-            print('metadata is match!')
+    filenames = [
+        'AssayPlate_NUNC_#165305-1_F05_T0038F002L01A02Z01C01.tif']
+    golden_metadata = {
+        # no image_sequence_number
+        'assay_plate_name': 'AssayPlate_NUNC_#165305-1',
+        'well': 'F05',
+        'time_point_number': 38,
+        'imaging_point_number': 2,
+        'time_line_number': 1,
+        'action_list_number': 2,
+        'z_index_3d': 1,
+        'color_channel': 1}
+    test(filenames, golden_metadata)

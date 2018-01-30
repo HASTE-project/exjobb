@@ -131,7 +131,6 @@ def __prepare_image_bytes(binning, file_path):
 
     benchmarking.end_benchmark('simulator_no_flask', 'image_to_bytes', benchmark_to_bytes)
 
-
     benchmarking.end_benchmark('simulator_no_flask', 'prepare_image_bytes_method', benchmark_start_image)
 
     return image_bytes_tiff
