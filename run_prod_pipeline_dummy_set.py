@@ -29,7 +29,7 @@ hio_config_hokan = {'master_host': '130.239.81.126',
 
 
 def run():
-    simulator_no_flask.get_files(dir, 0.01, None, None, "yes",
+    simulator_no_flask.get_files(dir, 0, None, None, "yes",
                                  hio_config=hio_config_hw_image_proc,
                                  stream_id_tag='dummy_set')
 
