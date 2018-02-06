@@ -34,11 +34,6 @@ def wait_for_record_count(py_collection, target_count):
     print('timed out waiting for completion')
 
 
-benchmarking.enable()
-
-benchmark_full_pipeline_start = benchmarking.start_benchmark()
-
-
 ip = '192.168.1.24'
 dir = '/mnt/ImageData/testDatasets/0'
 
@@ -67,6 +62,9 @@ hio_config_hw_image_proc_profiling = {'master_host': ip,
                                       'container_name': 'benblamey/haste-image-proc:latest-profiling',
                                       'container_os': 'ubuntu'}
 
+benchmarking.enable()
+
+benchmark_full_pipeline_start = benchmarking.start_benchmark()
 
 # get_files(file_path, period, binning, color_channel, send_to_target):
 stream_id = simulator_no_flask.get_files(dir, 0, None, None, "yes",
