@@ -12,12 +12,16 @@ python3 benchmark_full_pipeline.py | tee >(grep --line-buffered "^benchmarking,"
 
 def wait_for_record_count(py_collection, target_count):
     started = time.time()
-    while time.time() < started + (60 * 60):
+    while time.time() < started + (60 * 60): # wait max of 1 hour for completion.
         print('polling...', flush=True)
         count_now = py_collection.find().count()
         print('count is: ' + str(count_now))
-
         remaining = target_count - count_now
+
+        if count_now == 0 and time.time() > started + 60:
+            print('timed out waiting for first item')
+            return
+
         if remaining <= 0:
             return
         if remaining > 100:
@@ -26,6 +30,8 @@ def wait_for_record_count(py_collection, target_count):
             time.sleep(.1)
         else:
             time.sleep(.01)
+
+    print('timed out waiting for completion')
 
 
 benchmarking.enable()

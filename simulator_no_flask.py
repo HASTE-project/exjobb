@@ -40,7 +40,7 @@ def get_files(image_directory_path, period, binning, color_channel_filter, send_
     :param stream_id_tag: string to use in stream ID
     """
 
-    benchmark_started_streaming = benchmarking.start_benchmark()
+    benchmark_started = benchmarking.start_benchmark()
 
     files = os.listdir(image_directory_path)
     files = [file for file in files if not file.startswith('.')]
@@ -78,20 +78,33 @@ def get_files(image_directory_path, period, binning, color_channel_filter, send_
     # TODO: group into set of images with all colors, and send as a single message.
 
     for filename, file_info in files.items():
-        __stream_file(filename, file_info, binning, stream_id, stream_target)
+        file_info['image_bytes_tiff'] = __prepare_image_bytes(binning, file_info['full_path'])
+
+    benchmarking.end_benchmark('simulator_no_flask', 'prepared_to_stream', benchmark_started)
+
+    print("now starting streaming:")
+
+    benchmark_started_streaming = benchmarking.start_benchmark()
+    for filename, file_info in files.items():
+        __stream_file(filename, file_info, stream_id, stream_target)
         time.sleep(period)  # TODO: we haven't allocated any time since the last image was sent ?!
+    benchmarking.end_benchmark('simulator_no_flask', 'stream_all_images', benchmark_started_streaming)
 
     print("simulator: all files streamed")
-
-    benchmarking.end_benchmark('simulator_no_flask', 'stream_all_images', benchmark_started_streaming)
+    benchmarking.end_benchmark('simulator_no_flask', 'prepare_and_stream_all_images', benchmark_started)
 
     return stream_id
 
 
-def __stream_file(file_name, file_metadata, binning, stream_id, stream_target):
+def __stream_file(file_name, file_metadata, stream_id, stream_target):
+    # don't modify the original
+    file_metadata = file_metadata.copy()
+
+    # remove the image bytes from the dictionary and send it separately.
+    image_bytes_tiff = file_metadata.pop('image_bytes_tiff')
+
     # take one file, read, convert and send to the streaming framework.
 
-    image_bytes_tiff = __prepare_image_bytes(binning, file_metadata['full_path'])
     print("file: {} has size: {}".format(file_name, len(image_bytes_tiff)))
 
     file_metadata['stream_id'] = stream_id
