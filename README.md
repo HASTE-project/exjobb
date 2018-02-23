@@ -27,7 +27,7 @@ git clone https://github.com/HASTE-project/microscope-simulator.git
 ### Update
 
 ```
-cd exjobb
+cd microscope-simulator
 git pull https://github.com/HASTE-project/microscope-simulator.git
 ```
 
