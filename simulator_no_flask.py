@@ -20,6 +20,7 @@ import cv2
 import numpy as np
 from skimage import img_as_uint
 from skimage.measure import block_reduce
+from collections import OrderedDict
 
 from hio_stream_target import HarmonicIOStreamTarget
 
@@ -74,6 +75,13 @@ def get_files(image_directory_path, period, binning, color_channel_filter, send_
     if color_channel_filter is not None:
         files = {filename: file_info for filename, file_info in files.items()
                  if file_info['color_channel'] in color_channel_filter}
+
+    # sort the image stream to match the real microscope
+
+    files = OrderedDict(sorted(files.items(), key=lambda file_info: (file_info[1]['time_point_number'],
+                                                                    file_info[1]['well'],
+                                                                    file_info[1]['imaging_point_number'],
+                                                                    file_info[1]['color_channel'])))
 
     # TODO: group into set of images with all colors, and send as a single message.
 
