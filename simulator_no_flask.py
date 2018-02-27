@@ -45,8 +45,6 @@ def get_files(image_directory_path, period, binning, color_channel_filter, send_
 
     files = os.listdir(image_directory_path)
     files = [file for file in files if not file.startswith('.')]
-    print("simulator: list of files to stream:")
-    print(files)
 
     stream_id = datetime.datetime.today().strftime('%Y_%m_%d__%H_%M_%S') + '_' + stream_id_tag
     print("simulator: stream ID is: " + stream_id)
@@ -67,6 +65,9 @@ def get_files(image_directory_path, period, binning, color_channel_filter, send_
 
     files = {filename: azn_filenames.parse_azn_file_name(filename) for filename in files}
 
+    # Exclude files which failed to parse:
+    files = {filename: file_info for filename, file_info in files.items() if file_info is not None}
+
     # Add full path:
     for filename in files:
         files[filename]['full_path'] = os.path.join(image_directory_path, filename)
@@ -81,6 +82,11 @@ def get_files(image_directory_path, period, binning, color_channel_filter, send_
                                                                      file_info[1]['well'],
                                                                      file_info[1]['imaging_point_number'],
                                                                      file_info[1]['color_channel'])))
+
+    print("simulator: list of files to stream:")
+    print(files.keys())
+
+    print("simulator: caching files")
 
     # TODO: group into set of images with all colors, and send as a single message.
 
