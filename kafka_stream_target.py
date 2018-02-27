@@ -1,23 +1,11 @@
 """Module to connect to Kafka server and send messages to Kafka producer."""
 
 import time
-import abc
-
+from stream_target import StreamTarget
 from kafka import KafkaProducer, KafkaClient, SimpleProducer
 from kafka.common import LeaderNotAvailableError
 
 from myvariables import kafka_server, topic, max_msg_size
-class StreamTarget:
-
-    @abc.abstractmethod
-    def send_message(self, image_bytes, file_name, metadata):
-        """
-        :param image_bytes: bytearray for image.
-        :param file_name: original file name of image.
-        :param metadata: extra information (timestamp, spatial information, unique stream ID, etc.)
-        :return:
-        """
-        raise NotImplementedError('users must define this method to use this base class')
 
 
 class KafkaStreamTarget(StreamTarget):
