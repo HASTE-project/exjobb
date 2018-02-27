@@ -1,4 +1,4 @@
-from kafka_stream_target import StreamTarget
+from stream_target import StreamTarget
 from harmonicIO.stream_connector.stream_connector import StreamConnector
 import pickle
 
