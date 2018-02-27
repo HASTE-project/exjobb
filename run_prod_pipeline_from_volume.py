@@ -3,7 +3,7 @@ import simulator_no_flask
 # ** This script should be maintained to work on the production pipeline in the SNIC cloud **
 
 ip = '192.168.1.24'
-dir = '/mnt/ImageData/testDatasets/0'
+dir = '/mnt/ImageDataV2/fromAl/Data_20151215 HepG2 LNP size exp live cell 24h_20151215_110422/AssayPlate_NUNC_#165305-1'
 
 hio_config_ben_test_hio_example = {'master_host': ip,
                                    'master_port': 8080,
