@@ -76,12 +76,11 @@ def get_files(image_directory_path, period, binning, color_channel_filter, send_
         files = {filename: file_info for filename, file_info in files.items()
                  if file_info['color_channel'] in color_channel_filter}
 
-
     # Stream only files from test wells
-    test = ['B05', 'C02', 'C03', 'C04', 'C09', 'D04',
-            'D06', 'E10', 'F09', 'G02', 'G10', 'G11']
+    test_wells = ['B05', 'C02', 'C03', 'C04', 'C09', 'D04',
+                  'D06', 'E10', 'F09', 'G02', 'G10', 'G11']
 
-    files = {k: v for k, v in files.items() if v['well'] in test}
+    files = {k: v for k, v in files.items() if v['well'] in test_wells}
 
     # sort the image stream to match the real microscope
     files = OrderedDict(sorted(files.items(), key=lambda file_info: (file_info[1]['time_point_number'],
