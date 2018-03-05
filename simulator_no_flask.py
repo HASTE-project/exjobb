@@ -116,10 +116,13 @@ def __stream_file(file_name, file_info, stream_id, stream_target, binning):
     print("file: {} has size: {}".format(file_name, len(image_bytes_tiff)))
 
     file_info['stream_id'] = stream_id
-    file_info['timestamp'] = time.time()
+    file_info['timestamp'] = file_info['time_point_number']  # This is the timestamp used for the document in HASTE
     file_info['location'] = (12.34, 56.78)
+    file_info['substream_id'] = file_info['well']  # Use the well ID as the HASTE Substream ID
+
     file_info['image_length_bytes'] = len(image_bytes_tiff)
     file_info['original_filename'] = file_name
+    file_info['unix_timestamp'] = time.time()
 
     if stream_target is not None:
         # print(topic)
