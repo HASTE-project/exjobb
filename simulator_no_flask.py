@@ -26,7 +26,7 @@ from hio_stream_target import HarmonicIOStreamTarget
 
 
 def get_files(image_directory_path, period, binning, color_channel_filter, send_to_target, hio_config=None,
-              stream_id_tag='ll'):
+              stream_id_tag='ll', send_matching_files=lambda file_info: True):
     """
     This function retrieves files and creates a stream of files to be used as a microscope simulator.
     :param image_directory_path: path to directory containing image test data set files
@@ -39,6 +39,7 @@ def get_files(image_directory_path, period, binning, color_channel_filter, send_
     :param send_to_target: specify if the simulator shall stream images somewhere else with streaming framework. String, e.g. 'yes'
     :param hio_config: configuration dict for HarmonicIO integration. (see: hio_stream_target.py)
     :param stream_id_tag: string to use in stream ID
+    :param send_matching_files: predicate for a file_info, return True to send the file. Sends all image files if unspecified.
     """
 
     benchmark_started = benchmarking.start_benchmark()
@@ -68,6 +69,8 @@ def get_files(image_directory_path, period, binning, color_channel_filter, send_
     # Exclude files which failed to parse:
     files = {filename: file_info for filename, file_info in files.items() if file_info is not None}
 
+    files = {filename: file_info for filename, file_info in files.items() if send_matching_files(file_info)}
+
     # Add full path:
     for filename in files:
         files[filename]['full_path'] = os.path.join(image_directory_path, filename)
@@ -87,7 +90,6 @@ def get_files(image_directory_path, period, binning, color_channel_filter, send_
     print(files.keys())
 
     # TODO: group into set of images with all colors, and send as a single message?
-
 
     benchmarking.end_benchmark('simulator_no_flask', 'prepared_to_stream', benchmark_started)
 
