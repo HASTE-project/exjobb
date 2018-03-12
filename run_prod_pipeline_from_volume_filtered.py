@@ -40,7 +40,7 @@ def run():
     # get_files(file_path, period, binning, color_channel, send_to_target):
     stream_id = simulator_no_flask.get_files(dir, 0, None, None, "yes",
                                              hio_config=hio_config_hw_image_proc,
-                                             stream_id_tag='from_al',
+                                             stream_id_tag='from_al_filtered',
                                              send_matching_files=SEND_ONLY_FILES
                                              )
 
