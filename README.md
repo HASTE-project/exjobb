@@ -36,10 +36,25 @@ git pull https://github.com/HASTE-project/microscope-simulator.git
 ```
 python3 simulator.py
 ```
+
 ### To use without UI
 
-See `example_*.py`
+For the a single test image:
+```
+$ python3 run_prod_pipeline_dummy_set.py
+```
 
+For all the images in one of the test AZ datasets (500 images, takes 2-3 mins): 
+```
+$ python3 run_prod_pipeline_from_volume.py
+```
+
+For the all the green images:
+```
+$ python3 run_prod_pipeline_from_volume_filtered.py 
+```
+
+Or use from your own application:
 ```
 import simulator_no_flask
 simulator_no_flask.get_files(file_path, period, binning, color_channel, connect_kafka) # period = period time in seconds,  color_channel given as
